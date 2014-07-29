@@ -1,0 +1,44 @@
+{
+  "name": "githeartissues",
+  "version": "0.0.1",
+  "description": "git ♥ issues",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benweatherman/git♥issues.git"
+  },
+  "browserify": {
+    "transform": [
+      "brfs",
+      "browserify-shim"
+    ]
+  },
+  "browser": {
+    "lodash": "./node_modules/lodash/dist/lodash.js",
+    "knockout": "./node_modules/knockout/build/output/knockout-latest.debug.js",
+    "parse": "parse-browserify"
+  },
+  "browserify-shim": {},
+  "devDependencies": {
+    "brfs": "1.2.0",
+    "browserify": "4.2.3",
+    "browserify-shim": "3.6.0",
+    "gulp": "3.8.6",
+    "gulp-nunjucks-render": "0.1.0",
+    "gulp-raster": "0.1.0",
+    "gulp-rename": "1.2.0",
+    "gulp-rimraf": "0.1.0",
+    "gulp-sass": "0.7.2",
+    "gulp-task-listing": "0.3.0",
+    "gulp-util": "3.0.0",
+    "install": "0.1.7",
+    "jquery": "2.1.1",
+    "jquery-ui": "1.10.5",
+    "knockout": "3.1.0",
+    "lodash": "2.4.1",
+    "npm": "1.4.21",
+    "parse-browserify": "0.1.1",
+    "vinyl-source-stream": "0.1.1",
+    "when": "3.4.2"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,41 @@
+{% extends './src/html/_base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="/dist/css/popup.css">
+{% endblock %}
+
+{% block js %}
+<script src="/dist/js/popup.js"></script>
+{% endblock %}
+
+{% block body %}
+<section>
+    <form>
+        <fieldset>
+            <ul class="form-list medium-5 columns margin-left-0">
+                <li><strong>Configure git♥issues</strong></li>
+                <li>
+                    <label for="id-token">API Token</label>
+                    <input type="text" name="token" id="id-token">
+                </li>
+                <li>
+                    <label for="id-repo">Repo</label>
+                    <input type="text" name="repo" id="id-repo">
+                </li>
+
+                <li>
+                    <label for="id-parse-app-id">Parse App ID</label>
+                    <input type="text" name="parse-app-id" id="id-parse-app-id">
+                </li>
+                <li>
+                    <label for="id-parse-key">Parse Key</label>
+                    <input type="text" name="parse-key" id="id-parse-key">
+                </li>
+            </ul>
+
+            <submit value="Save">
+
+        </fieldset>
+    </form>
+</section>
+{% endblock %}

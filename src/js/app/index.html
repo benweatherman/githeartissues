@@ -1,0 +1,15 @@
+<!-- ko foreach: milestones -->
+<div class="sortable-container">
+    <h3 data-bind="text: title"></h3>
+
+    <ul class="sortable connected-sortable" data-bind="sortable: {data: issues, connectClass: 'connected-sortable', afterMove: $root.afterMove.bind($root)}">
+        <li>
+            <div data-bind="text: number"></div>
+            <div data-bind="text: title"></div>
+            <!-- ko if: avatarURL -->
+            <img width="50" height="50" data-bind="attr: {src: avatarURL}">
+            <!-- /ko -->
+        </li>
+    </ul>
+</div>
+<!-- /ko -->
