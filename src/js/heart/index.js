@@ -1,4 +1,3 @@
-var fs = require('fs');
 var _ = require('lodash');
 var when = require('when');
 var ko = require('knockout');
@@ -155,6 +154,9 @@ var model = {
     parseKey: ko.observable(),
     fetching: ko.observable(false),
     milestones: ko.observableArray(),
+    show: function(el) {
+        ko.applyBindings(this, el);
+    },
     initParse: function() {
         if (!this.parseAppID() || !this.parseKey()) { return; }
 
@@ -215,41 +217,4 @@ model.repo.subscribe(fetchMilestones);
 model.parseAppID.subscribe(fetchMilestones);
 model.parseKey.subscribe(fetchMilestones);
 
-if (chrome && chrome.runtime) {
-    // Listen for the extension to send us new values
-    chrome.runtime.onMessage.addListener(function(data, sender, respondWith) {
-        model.token(data.token);
-        model.repo(data.repo);
-
-        model.parseAppID(data.parseAppID);
-        model.parseKey(data.parseKey);
-
-        respondWith({});
-    });
-
-    // Ask for the current config
-    chrome.runtime.sendMessage({}, function(response) {
-        console.log('Extension config', response);
-
-        model.token(response.token);
-        model.repo(response.repo);
-        model.parseAppID(response.parseAppID);
-        model.parseKey(response.parseKey);
-    });
-}
-
-var contentEl = document.querySelector('#js-repo-pjax-container .table-list-milestones');
-if (contentEl) {
-    var newEl = document.createElement('div');
-    newEl.innerHTML = fs.readFileSync(__dirname + '/index.html', 'utf8');
-    contentEl.parentNode.appendChild(newEl);
-
-    ko.applyBindings(model, newEl);
-
-    contentEl.style.display = 'none';
-}
-else {
-    console.error('Not loading git♥issues because contentEl ===', contentEl);
-}
-
-window['♥'] = model;
+module.exports = model;

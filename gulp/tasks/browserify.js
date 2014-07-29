@@ -30,18 +30,18 @@ gulp.task('browserify-eventPage', function() {
         .pipe(gulp.dest('./dist/js/'));
 });
 
-gulp.task('browserify-♥', function() {
+gulp.task('browserify-extension', function() {
 
     var bundler = browserify({
-        entries: ['./src/js/app/index.js'],
+        entries: ['./src/js/extension/index.js'],
         extensions: ['.js'],
         debug: true
     });
 
     return bundler
         .bundle()
-        .pipe(source('♥.js'))
+        .pipe(source('extension.js'))
         .pipe(gulp.dest('./dist/js/'));
 });
 
-gulp.task('browserify', ['browserify-popup', 'browserify-eventPage', 'browserify-♥']);
+gulp.task('browserify', ['browserify-popup', 'browserify-eventPage', 'browserify-extension']);

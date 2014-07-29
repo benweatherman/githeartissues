@@ -21,8 +21,8 @@
   "content_scripts": [
     {
       "matches": ["https://github.com/*/*/milestones"],
-      "css": ["dist/css/app.css"],
-      "js": ["dist/js/♥.js"]
+      "css": ["dist/css/extension.css"],
+      "js": ["dist/js/extension.js"]
     }
   ],
   "background": {
