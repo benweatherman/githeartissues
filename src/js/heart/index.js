@@ -1,8 +1,10 @@
+var fs = require('fs');
 var _ = require('lodash');
 var when = require('when');
 var ko = require('knockout');
 
-var sortable = require('./lib/knockout-sortable');
+var _koSortable = require('./lib/knockout-sortable');
+var _koStringTemplate = require('./lib/knockout-string-template');
 var Parse = require('parse');
 
 var github = require('./github');
@@ -148,6 +150,7 @@ _.extend(Milestone.prototype, {
 });
 
 var model = {
+    template: fs.readFileSync(__dirname + '/index.html', 'utf8'),
     token: ko.observable(),
     repo: ko.observable(),
     parseAppID: ko.observable(),

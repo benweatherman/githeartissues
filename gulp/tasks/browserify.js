@@ -44,4 +44,18 @@ gulp.task('browserify-extension', function() {
         .pipe(gulp.dest('./dist/js/'));
 });
 
-gulp.task('browserify', ['browserify-popup', 'browserify-eventPage', 'browserify-extension']);
+gulp.task('browserify-app', function() {
+
+    var bundler = browserify({
+        entries: ['./src/js/app/index.js'],
+        extensions: ['.js'],
+        debug: true
+    });
+
+    return bundler
+        .bundle()
+        .pipe(source('app.js'))
+        .pipe(gulp.dest('./dist/js/'));
+});
+
+gulp.task('browserify', ['browserify-popup', 'browserify-eventPage', 'browserify-extension', 'browserify-app']);

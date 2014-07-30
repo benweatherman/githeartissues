@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-var heart = require('../heart/index.js');
+var heart = require('../heart');
 
 if (chrome && chrome.runtime) {
     // Listen for the extension to send us new values
@@ -28,7 +28,7 @@ if (chrome && chrome.runtime) {
 var contentEl = document.querySelector('#js-repo-pjax-container .table-list-milestones');
 if (contentEl) {
     var newEl = document.createElement('div');
-    newEl.innerHTML = fs.readFileSync(__dirname + '/../heart/index.html', 'utf8');
+    newEl.innerHTML = '<div data-bind="template: template"></div>';
     contentEl.parentNode.appendChild(newEl);
 
     heart.show(newEl);
