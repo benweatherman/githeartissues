@@ -1,0 +1,25 @@
+.popover {
+  position: relative;
+  width: 200px;
+    height: 100px;
+    background-color: rgb(233, 212, 222);
+    border-radius: 4px;
+  top: 50px;
+  left: 50px;
+  box-shadow: 3px -2px 4px #AAA;
+
+}
+
+
+.popover-arrow {
+    position: absolute;
+    top: -18px;
+    left: 20px;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid rgb(233, 212, 222);
+  width: 0;
+  height: 0;
+
+  -webkit-filter: drop-shadow(0 -2px 2px #AAA);
+}

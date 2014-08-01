@@ -1,1 +1,10 @@
 @import 'base';
+@import 'popover';
+
+section {
+    @include outer-container;
+
+    .sortable-container {
+        @include span-columns(2);
+    }
+}
