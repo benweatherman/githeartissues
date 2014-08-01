@@ -3,7 +3,7 @@
         <h3>Open Issues</h3>
 
         <ul class="sortable connected-sortable" data-bind="sortable: {data: openIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}">
-            <li>
+            <li class="issue">
                 <a data-bind="attr: {href: htmlURL}">
                     <span data-bind="text: number"></span>
                     <span data-bind="text: title"></span>
@@ -20,7 +20,7 @@
         <h3 data-bind="text: title"></h3>
 
         <ul class="sortable connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
-            <li>
+            <li class="issue">
                 <a data-bind="attr: {href: htmlURL}">
                     <span data-bind="text: number"></span>
                     <span data-bind="text: title"></span>

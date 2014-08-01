@@ -1,2 +1,24 @@
 @import 'bourbon';
 @import 'neat';
+
+@import 'popover';
+
+ul, li {
+    list-style-type: none;
+}
+
+section {
+    @include outer-container;
+
+    .sortable-container {
+        @include span-columns(2);
+    }
+
+    .sortable {
+        padding-left: 0;
+    }
+}
+
+.issue {
+    margin: 1em;
+}
