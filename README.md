@@ -5,3 +5,25 @@ At ordoro, we file all issues in a single repo. Our milestones are just our team
 With this Chrome extension, we'll load all the milestones in a nice kanban-ish card layout. You can then re-order them, assign them to other teams, and (eventually) changed the assignee.♥ github
 
 We've always loved using github issues. Now we ♥ using it.
+
+
+#### Building
+
+Build everything
+```bash
+./bootstrap.sh
+gulp build watch
+```
+
+open up `dist/html/app.html`
+
+
+#### Configuring
+
+You'll need to set some params before anything will load
+```js
+localStorage.setItem('git♥issues:token', '<Github API Key>');  // Generate one at https://github.com/settings/tokens/new
+localStorage.setItem('git♥issues:repo', '<Github Repo>');  // e.g. ordoro/ordoro
+localStorage.setItem('git♥issues:parseAppID', '<Parse App ID>');
+localStorage.setItem('git♥issues:parseKey', '<Parse Key>');
+```
