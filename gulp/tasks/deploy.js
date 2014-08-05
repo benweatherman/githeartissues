@@ -13,7 +13,7 @@ gulp.task('deploy', function() {
     gulp.src('./js/app.js', {cwd: './dist'})
         .pipe(gulp.dest('./dist/gh-pages/js'));
 
-    var options = {};
-    gulp.src('**/*', {cwd: './dist/gh-pages'})
+    var options = {cacheDir: '/tmp/♥'};
+    gulp.src('./dist/gh-pages/**/*')
         .pipe(deploy(options));
 });

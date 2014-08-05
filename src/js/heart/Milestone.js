@@ -4,6 +4,7 @@ var when = require('when');
 var Parse = require('parse');
 var github = require('./github');
 
+var log = require('./log');
 var Issue = require('./Issue');
 
 var IssueOrdering = Parse.Object.extend('IssueOrdering', {
@@ -52,7 +53,7 @@ _.extend(Milestone.prototype, {
     saveSortOrder: function(issues) {
         var issueNumbers = issues.map(function(issue) { return issue.number(); });
 
-        console.log('Saving issue ordering for milestone', this.number(), this.title(), ':', issueNumbers);
+        log.log('Saving issue ordering for milestone', this.number(), this.title(), ':', issueNumbers);
 
         return this.getParseObject()
                     .then(function() {
@@ -71,7 +72,7 @@ _.extend(Milestone.prototype, {
 
         return this.getIssueSort()
             .then(function(issueSort) {
-                console.log('Sorting', this.title(), 'issues with', issueSort);
+                log.log('Sorting', this.title(), 'issues with', issueSort);
                 issueSort.forEach(function(number) {
                     var issue = issuesByNumber[number];
                     if (issue) {
@@ -97,7 +98,7 @@ _.extend(Milestone.prototype, {
             });
     },
     fetchIssues: function() {
-        console.log('Fetching issues for milestone', this.number(), ':', this.title());
+        log.log('Fetching issues for milestone', this.number(), ':', this.title());
 
         var url = 'repos/' + this.repo + '/issues';
         var params = {page_page: 100, milestone: this.number()};
@@ -110,7 +111,7 @@ _.extend(Milestone.prototype, {
                     .tap(this.issues.bind(this))
                     .catch(function(e) {
                         var msg = 'Could not load issues for milestones ' + this.title();
-                        console.error(msg, e);
+                        log.error(msg, e);
                         throw Error(msg);
                     }.bind(this));
     }

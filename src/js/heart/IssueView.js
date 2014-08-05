@@ -1,6 +1,7 @@
 var ko = require('knockout');
 var _ = require('lodash');
 
+var log = require('./log');
 var Issue = require('./Issue');
 
 function IssueView() {
@@ -11,12 +12,12 @@ function IssueView() {
 
 _.extend(IssueView.prototype, Issue.prototype, {
     assignUser: function(user) {
-        console.log('ASSigning', user, '=>', this);
+        log.log('ASSigning', user, '=>', this);
         this.assignee(user);
 
         this.save()
             .tap(this.assignUserVisible.bind(undefined, false))
-            .catch(console.error.bind(console));
+            .catch(log.error.bind(log));
     }
 });
 

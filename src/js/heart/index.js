@@ -9,6 +9,7 @@ var _koStringTemplate = require('./lib/knockout-string-template');
 var Parse = require('parse');
 var github = require('./github');
 
+var log = require('./log');
 var MilestoneView = require('./MilestoneView');
 var IssueView = require('./IssueView');
 var User = require('./User');
@@ -35,11 +36,11 @@ _.extend(heart, {
     },
     start: function() {
         if (!this.token() || !this.repo() || !this.parseAppID() || !this.parseKey()) {
-            console.info('Not loading git♥issues because we don\'t have all the config set', this.repo(), this.token(), this.parseAppID(), this.parseKey());
+            log.info('Not loading git♥issues because we don\'t have all the config set', this.repo(), this.token(), this.parseAppID(), this.parseKey());
             return;
         }
 
-        console.log('Fetching milestones for ', this.repo());
+        log.log('Fetching milestones for ', this.repo());
 
         github.get('repos/' + this.repo() + '/milestones')
             .then(function(response) {
@@ -48,7 +49,7 @@ _.extend(heart, {
             .tap(this.milestones.bind(this))
             .catch(function(e) {
                 var msg = 'Could not load milestones for repo ' + this.repo() + ' ' + e.message;
-                console.error(msg, e);
+                log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
 
@@ -59,13 +60,13 @@ _.extend(heart, {
             .tap(this.users.bind(this))
             .catch(function(e) {
                 var msg = 'Could not load users for repo ' + this.repo() + ' ' + e.message;
-                console.error(msg, e);
+                log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
     },
     fetchAllIssues: _.debounce(function() {
         if (!this.token() || !this.repo()) {
-            console.info('Not fetching issues because we don\'t have all the config set', this.repo(), this.token());
+            log.info('Not fetching issues because we don\'t have all the config set', this.repo(), this.token());
             return;
         }
 
@@ -76,7 +77,7 @@ _.extend(heart, {
             .tap(this.allIssues.bind(this))
             .catch(function(e) {
                 var msg = 'Could not load open issues for repo ' + this.repo() + ' ' + e.message;
-                console.error(msg, e);
+                log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
     }, 500, heart),
@@ -85,17 +86,17 @@ _.extend(heart, {
         var source = options.sourceParent();
         var target = options.targetParent();
 
-        console.log('Issue moved', issue);
+        log.log('Issue moved', issue);
 
         if (source !== target) {
-            console.log(source, '=>', target);
+            log.log(source, '=>', target);
             var targetMilestone = _.find(this.milestones(), function(m) { return target === m.issueViews(); });
             if (!targetMilestone) {
-                console.error('WTF happened. There\'s no milestone that matches the target', target);
+                log.error('WTF happened. There\'s no milestone that matches the target', target);
                 return;
             }
 
-            console.log('Changing issue', issue.number(), 'to milestone', targetMilestone.title(), targetMilestone.number());
+            log.log('Changing issue', issue.number(), 'to milestone', targetMilestone.title(), targetMilestone.number());
 
             issue.milestoneNumber(targetMilestone.number()).save();
         }
@@ -107,7 +108,7 @@ _.extend(heart, {
         var source = options.sourceParent();
         var target = options.targetParent();
 
-        console.log('Removing issue from milestone', issue);
+        log.log('Removing issue from milestone', issue);
 
         issue.milestoneNumber('').save();
 
@@ -119,7 +120,7 @@ _.extend(heart, {
             return;
         }
 
-        console.log('Changing assignee for', milestoneView, issue);
+        log.log('Changing assignee for', milestoneView, issue);
         this.milestones().forEach(function(milestone) {
             milestone.issueViews().forEach(function(view) { view.assignUserVisible(false); });
         });
