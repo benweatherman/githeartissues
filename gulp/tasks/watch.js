@@ -1,8 +1,8 @@
 var gulp = require('gulp');
 
 gulp.task('watch', function() {
-    gulp.watch('./src/js/**', ['browserify']);
-    gulp.watch('./src/sass/**', ['sass']);
-    gulp.watch('./src/images/**', ['icons']);
-    gulp.watch('./src/html/**', ['nunjucks']);
+    gulp.watch('./src/js/**', ['build-js']);
+    gulp.watch('./src/sass/**', ['build-css']);
+    gulp.watch('./src/images/**', ['build-icons']);
+    gulp.watch('./src/html/**', ['build-html']);
 });
