@@ -2,28 +2,26 @@ var fs = require('fs');
 
 var heart = require('../heart');
 
-if (chrome && chrome.runtime) {
-    // Listen for the extension to send us new values
-    chrome.runtime.onMessage.addListener(function(data, sender, respondWith) {
-        heart.token(data.token);
-        heart.repo(data.repo);
+// Listen for the extension to send us new values
+chrome.runtime.onMessage.addListener(function(data, sender, respondWith) {
+    heart.token(data.token);
+    heart.repo(data.repo);
 
-        heart.parseAppID(data.parseAppID);
-        heart.parseKey(data.parseKey);
+    heart.parseAppID(data.parseAppID);
+    heart.parseKey(data.parseKey);
 
-        respondWith({});
-    });
+    respondWith({});
+});
 
-    // Ask for the current config
-    chrome.runtime.sendMessage({}, function(response) {
-        console.log('Extension config', response);
+// Ask for the current config
+chrome.runtime.sendMessage({}, function(response) {
+    console.log('Extension config', response);
 
-        heart.token(response.token);
-        heart.repo(response.repo);
-        heart.parseAppID(response.parseAppID);
-        heart.parseKey(response.parseKey);
-    });
-}
+    heart.token(response.token);
+    heart.repo(response.repo);
+    heart.parseAppID(response.parseAppID);
+    heart.parseKey(response.parseKey);
+});
 
 var contentEl = document.querySelector('#js-repo-pjax-container .table-list-milestones');
 if (contentEl) {
