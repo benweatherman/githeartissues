@@ -1,7 +1,7 @@
 <section>
     <div class="sortable-container">
         <h3>Issues</h3>
-        <input type="text" style="width: 500px;" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
+        <input type="text" class="search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
         <ul class="sortable connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}">
             <li class="issue">
                 <a data-bind="attr: {href: htmlURL}">
