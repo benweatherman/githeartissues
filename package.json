@@ -24,6 +24,7 @@
     "browserify": "4.2.3",
     "browserify-shim": "3.6.0",
     "gulp": "3.8.6",
+    "gulp-gh-pages": "0.3.3",
     "gulp-nunjucks-render": "0.1.0",
     "gulp-raster": "0.1.0",
     "gulp-rename": "1.2.0",
