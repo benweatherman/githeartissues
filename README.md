@@ -6,16 +6,9 @@ With this Chrome extension, we'll load all the milestones in a nice kanban-ish c
 
 We've always loved using github issues. Now we ♥ using it.
 
+#### Demo
 
-#### Building
-
-Build everything
-```bash
-./bootstrap.sh
-gulp build watch
-```
-
-open up `dist/html/app.html`
+Check out http://benweatherman.github.io/githeartissues/ (make sure you follow the configuring section)
 
 
 #### Configuring
@@ -27,3 +20,14 @@ localStorage.setItem('git♥issues:repo', '<Github Repo>');  // e.g. ordoro/ordo
 localStorage.setItem('git♥issues:parseAppID', '<Parse App ID>');
 localStorage.setItem('git♥issues:parseKey', '<Parse Key>');
 ```
+
+
+#### Building
+
+Build everything
+```bash
+./bootstrap.sh
+gulp build watch
+```
+
+open up `dist/html/app.html`
