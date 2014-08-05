@@ -23,4 +23,4 @@ gulp.task('icon-128', function () {
         .pipe(gulp.dest('./dist/images'));
 });
 
-gulp.task('icons', ['icon-16', 'icon-48', 'icon-128']);
+gulp.task('build-icons', ['icon-16', 'icon-48', 'icon-128']);

@@ -58,4 +58,4 @@ gulp.task('browserify-app', function() {
         .pipe(gulp.dest('./dist/js/'));
 });
 
-gulp.task('browserify', ['browserify-popup', 'browserify-eventPage', 'browserify-extension', 'browserify-app']);
+gulp.task('build-js', ['browserify-popup', 'browserify-eventPage', 'browserify-extension', 'browserify-app']);
