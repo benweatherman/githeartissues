@@ -35906,6 +35906,7 @@ module.exports = Issue;
 var ko = require('knockout');
 var _ = require('lodash');
 
+var log = require('./log');
 var Issue = require('./Issue');
 
 function IssueView() {
@@ -35916,12 +35917,12 @@ function IssueView() {
 
 _.extend(IssueView.prototype, Issue.prototype, {
     assignUser: function(user) {
-        console.log('ASSigning', user, '=>', this);
+        log.log('ASSigning', user, '=>', this);
         this.assignee(user);
 
         this.save()
             .tap(this.assignUserVisible.bind(undefined, false))
-            .catch(console.error.bind(console));
+            .catch(log.error.bind(log));
     }
 });
 
@@ -35933,13 +35934,14 @@ _.extend(IssueView, {
 
 module.exports = IssueView;
 
-},{"./Issue":57,"knockout":13,"lodash":14}],59:[function(require,module,exports){
+},{"./Issue":57,"./log":66,"knockout":13,"lodash":14}],59:[function(require,module,exports){
 var ko = require('knockout');
 var _ = require('lodash');
 var when = require('when');
 var Parse = require('parse');
 var github = require('./github');
 
+var log = require('./log');
 var Issue = require('./Issue');
 
 var IssueOrdering = Parse.Object.extend('IssueOrdering', {
@@ -35988,7 +35990,7 @@ _.extend(Milestone.prototype, {
     saveSortOrder: function(issues) {
         var issueNumbers = issues.map(function(issue) { return issue.number(); });
 
-        console.log('Saving issue ordering for milestone', this.number(), this.title(), ':', issueNumbers);
+        log.log('Saving issue ordering for milestone', this.number(), this.title(), ':', issueNumbers);
 
         return this.getParseObject()
                     .then(function() {
@@ -36007,7 +36009,7 @@ _.extend(Milestone.prototype, {
 
         return this.getIssueSort()
             .then(function(issueSort) {
-                console.log('Sorting', this.title(), 'issues with', issueSort);
+                log.log('Sorting', this.title(), 'issues with', issueSort);
                 issueSort.forEach(function(number) {
                     var issue = issuesByNumber[number];
                     if (issue) {
@@ -36033,7 +36035,7 @@ _.extend(Milestone.prototype, {
             });
     },
     fetchIssues: function() {
-        console.log('Fetching issues for milestone', this.number(), ':', this.title());
+        log.log('Fetching issues for milestone', this.number(), ':', this.title());
 
         var url = 'repos/' + this.repo + '/issues';
         var params = {page_page: 100, milestone: this.number()};
@@ -36046,7 +36048,7 @@ _.extend(Milestone.prototype, {
                     .tap(this.issues.bind(this))
                     .catch(function(e) {
                         var msg = 'Could not load issues for milestones ' + this.title();
-                        console.error(msg, e);
+                        log.error(msg, e);
                         throw Error(msg);
                     }.bind(this));
     }
@@ -36054,7 +36056,7 @@ _.extend(Milestone.prototype, {
 
 module.exports = Milestone;
 
-},{"./Issue":57,"./github":62,"knockout":13,"lodash":14,"parse":38,"when":55}],60:[function(require,module,exports){
+},{"./Issue":57,"./github":62,"./log":66,"knockout":13,"lodash":14,"parse":38,"when":55}],60:[function(require,module,exports){
 var ko = require('knockout');
 var _ = require('lodash');
 
@@ -36140,7 +36142,7 @@ Object.defineProperty(github, 'defaultHeaders', {
 
 module.exports = github;
 
-},{"./requests":66}],63:[function(require,module,exports){
+},{"./requests":67}],63:[function(require,module,exports){
 
 var _ = require('lodash');
 var when = require('when');
@@ -36152,6 +36154,7 @@ var _koStringTemplate = require('./lib/knockout-string-template');
 var Parse = require('parse');
 var github = require('./github');
 
+var log = require('./log');
 var MilestoneView = require('./MilestoneView');
 var IssueView = require('./IssueView');
 var User = require('./User');
@@ -36178,11 +36181,11 @@ _.extend(heart, {
     },
     start: function() {
         if (!this.token() || !this.repo() || !this.parseAppID() || !this.parseKey()) {
-            console.info('Not loading git♥issues because we don\'t have all the config set', this.repo(), this.token(), this.parseAppID(), this.parseKey());
+            log.info('Not loading git♥issues because we don\'t have all the config set', this.repo(), this.token(), this.parseAppID(), this.parseKey());
             return;
         }
 
-        console.log('Fetching milestones for ', this.repo());
+        log.log('Fetching milestones for ', this.repo());
 
         github.get('repos/' + this.repo() + '/milestones')
             .then(function(response) {
@@ -36191,7 +36194,7 @@ _.extend(heart, {
             .tap(this.milestones.bind(this))
             .catch(function(e) {
                 var msg = 'Could not load milestones for repo ' + this.repo() + ' ' + e.message;
-                console.error(msg, e);
+                log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
 
@@ -36202,13 +36205,13 @@ _.extend(heart, {
             .tap(this.users.bind(this))
             .catch(function(e) {
                 var msg = 'Could not load users for repo ' + this.repo() + ' ' + e.message;
-                console.error(msg, e);
+                log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
     },
     fetchAllIssues: _.debounce(function() {
         if (!this.token() || !this.repo()) {
-            console.info('Not fetching issues because we don\'t have all the config set', this.repo(), this.token());
+            log.info('Not fetching issues because we don\'t have all the config set', this.repo(), this.token());
             return;
         }
 
@@ -36219,7 +36222,7 @@ _.extend(heart, {
             .tap(this.allIssues.bind(this))
             .catch(function(e) {
                 var msg = 'Could not load open issues for repo ' + this.repo() + ' ' + e.message;
-                console.error(msg, e);
+                log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
     }, 500, heart),
@@ -36228,17 +36231,17 @@ _.extend(heart, {
         var source = options.sourceParent();
         var target = options.targetParent();
 
-        console.log('Issue moved', issue);
+        log.log('Issue moved', issue);
 
         if (source !== target) {
-            console.log(source, '=>', target);
+            log.log(source, '=>', target);
             var targetMilestone = _.find(this.milestones(), function(m) { return target === m.issueViews(); });
             if (!targetMilestone) {
-                console.error('WTF happened. There\'s no milestone that matches the target', target);
+                log.error('WTF happened. There\'s no milestone that matches the target', target);
                 return;
             }
 
-            console.log('Changing issue', issue.number(), 'to milestone', targetMilestone.title(), targetMilestone.number());
+            log.log('Changing issue', issue.number(), 'to milestone', targetMilestone.title(), targetMilestone.number());
 
             issue.milestoneNumber(targetMilestone.number()).save();
         }
@@ -36250,7 +36253,7 @@ _.extend(heart, {
         var source = options.sourceParent();
         var target = options.targetParent();
 
-        console.log('Removing issue from milestone', issue);
+        log.log('Removing issue from milestone', issue);
 
         issue.milestoneNumber('').save();
 
@@ -36262,7 +36265,7 @@ _.extend(heart, {
             return;
         }
 
-        console.log('Changing assignee for', milestoneView, issue);
+        log.log('Changing assignee for', milestoneView, issue);
         this.milestones().forEach(function(milestone) {
             milestone.issueViews().forEach(function(view) { view.assignUserVisible(false); });
         });
@@ -36298,7 +36301,7 @@ heart.parseKey(localStorage.getItem('git♥issues:parseKey'));
 
 module.exports = heart;
 
-},{"./IssueView":58,"./MilestoneView":60,"./User":61,"./github":62,"./lib/knockout-sortable":64,"./lib/knockout-string-template":65,"knockout":13,"lodash":14,"parse":38,"when":55}],64:[function(require,module,exports){
+},{"./IssueView":58,"./MilestoneView":60,"./User":61,"./github":62,"./lib/knockout-sortable":64,"./lib/knockout-string-template":65,"./log":66,"knockout":13,"lodash":14,"parse":38,"when":55}],64:[function(require,module,exports){
 // knockout-sortable 0.8.8 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     var sortable = require('jquery-ui/sortable');
@@ -36678,6 +36681,13 @@ ko.setTemplateEngine(engine);
 module.exports = engine;
 
 },{"MD5":1,"knockout":13}],66:[function(require,module,exports){
+var log = console || {
+
+};
+
+module.exports = log;
+
+},{}],67:[function(require,module,exports){
 var when = require('when');
 var _ = require('lodash');
 
