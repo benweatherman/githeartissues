@@ -3,7 +3,7 @@ var git = require('gulp-git');
 var bump = require('gulp-bump');
 var tag = require('gulp-tag-version');
 
-gulp.task('version', function() {
+gulp.task('bump', function() {
     return gulp.src('./package.json')
         .pipe(bump({type: 'patch'}))
         .pipe(gulp.dest('./'))
