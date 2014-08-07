@@ -1,15 +1,19 @@
-<section>
-    <div class="sortable-container">
-        <h3>Issues</h3>
-        <input type="text" class="search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
+<section class="template-wrap clearfix">
+    <div class="sortable-container open-issues-wrap">
+        <h4 class="list-header">Open Issues</h4>
+        <div class="search-wrap">
+            <input type="text" class="search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
+        </div>
         <ul class="sortable connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}">
             <li class="issue">
                 <a data-bind="attr: {href: htmlURL}">
-                    <span data-bind="text: number"></span>
+                    <strong class="make-block" data-bind="text: number"></strong>
                     <span data-bind="text: title"></span>
                 </a>
                 <!-- ko if: assignee -->
-                <img width="50" height="50" data-bind="attr: {src: assignee().avatarURL}">
+                <span class="avatar-wrap issue-avatar">
+                    <img data-bind="attr: {src: assignee().avatarURL}">
+                </span>
                 <!-- /ko -->
             </li>
         </ul>
@@ -17,36 +21,41 @@
 
     <!-- ko foreach: milestones -->
     <div class="sortable-container">
-        <h3 data-bind="text: title"></h3>
+        <h4 class="list-header" data-bind="text: title"></h3>
 
         <ul class="sortable connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
             <li class="issue">
                 <a data-bind="attr: {href: htmlURL}">
-                    <span data-bind="text: number"></span>
+                    <strong class="make-block" data-bind="text: number"></strong>
                     <span data-bind="text: title"></span>
                 </a>
                 <!-- ko if: assignee -->
-                <img width="50" height="50" data-bind="attr: {src: assignee().avatarURL}">
+                <span class="avatar-wrap issue-avatar">
+                    <img data-bind="attr: {src: assignee().avatarURL}">
+                </span>
                 <!-- /ko -->
 
-                <button data-bind="click: $root.showAssignUser.bind($root, $parent)">Assign</button>
-
-                <!-- ko if: assignUserVisible -->
-                <div class="popover">
-                    <div class="popover-inner">
-                        <dl>
-                            <dt>ASSign user</dt>
-                            <!-- ko foreach: $root.users -->
-                            <dd>
-                                <img width="50" height="50" data-bind="attr: {src: avatarURL}">
-                                <span data-bind="text: login"></span>
-                                <button data-bind="click: $parent.assignUser.bind($parent)">x</button>
-                            </dd>
-                            <!-- /ko -->
-                        </dl>
+                <div class="popover-wrapper make-block" data-bind="css: {expanded: assignUserVisible}">
+                    <button class="assign-button" data-bind="click: $root.showAssignUser.bind($root, $parent)">Assign issue to...</button>
+                    <!-- ko if: assignUserVisible -->
+                    <div class="popover">
+                        <div class="popover-inner">
+                            <ul>
+                                <!-- ko foreach: $root.users -->
+                                <li>
+                                    <button class="assign-user-button" data-bind="click: $parent.assignUser.bind($parent)">
+                                        <span class="avatar-wrap make-inline-block popover-avatar">
+                                            <img data-bind="attr: {src: avatarURL}">
+                                        </span>
+                                        <span class="button-text" data-bind="text: login"></span>
+                                    </button>
+                                </li>
+                                <!-- /ko -->
+                            </ul>
+                        </div>
                     </div>
+                    <!-- /ko -->
                 </div>
-                <!-- /ko -->
             </li>
         </ul>
     </div>
