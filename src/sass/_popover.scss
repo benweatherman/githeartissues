@@ -1,25 +1,53 @@
+.popover-wrapper {
+    position: relative;
+}
+
 .popover {
-  position: relative;
-  width: 200px;
-    height: 100px;
-    background-color: rgb(233, 212, 222);
-    border-radius: 4px;
-  top: 50px;
-  left: 50px;
-  box-shadow: 3px -2px 4px #AAA;
+    position: absolute;
+    width: 125%;
+    z-index: 5;
+    background: #999;
+    margin-top: -1px;
+    border-radius: 0 .2em .2em .2em;
+    padding: 0;
+
+    ul {
+        padding-left: 0;
+    }
+    li {
+        margin: 0;
+        &:last-of-type {
+            .assign-user-button {
+                border-bottom: 0;
+            }
+        }
+    }
 
 }
 
+.assign-user-button {
+    -webkit-font-smoothing: antialiased;
+    border: 0;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    font-family: 'Arimo', sans-serif;
+    font-size: 1.35em;
+    vertical-align: middle;
+    padding: .75em 1em;
+    margin: 0;
+    color: #fff;
+    border-bottom: 1px dotted #bbb;
+    &:hover {
+        cursor: pointer;
+        background: rgba(255,255,255,.15);
+    }
+    &:focus {
+        outline: none;
+    }
 
-.popover-arrow {
-    position: absolute;
-    top: -18px;
-    left: 20px;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 20px solid rgb(233, 212, 222);
-  width: 0;
-  height: 0;
+}
 
-  -webkit-filter: drop-shadow(0 -2px 2px #AAA);
+.button-text {
+    vertical-align: middle;
 }
