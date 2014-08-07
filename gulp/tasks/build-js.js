@@ -44,7 +44,7 @@ gulp.task('browserify-extension', function() {
         .pipe(gulp.dest('./dist/js/'));
 });
 
-gulp.task('browserify-app', function() {
+gulp.task('build-js-app', function() {
 
     var bundler = browserify({
         entries: ['./src/js/app/index.js'],
@@ -58,4 +58,4 @@ gulp.task('browserify-app', function() {
         .pipe(gulp.dest('./dist/js/'));
 });
 
-gulp.task('build-js', ['browserify-popup', 'browserify-eventPage', 'browserify-extension', 'browserify-app']);
+gulp.task('build-js', ['browserify-popup', 'browserify-eventPage', 'browserify-extension', 'build-js-app']);
