@@ -1,12 +1,14 @@
 <section class="template-wrap clearfix">
+    <!-- loads the credentials modal -->
+    <button type="button" class="icon-button settings-button">
+        <span class="fa fa-gear fa-lg"></span>
+    </button>
     <div class="sortable-container open-issues-wrap">
         <h4 class="list-header">Open Issues</h4>
-        <div class="search-wrap">
-            <input type="text" class="search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
-        </div>
+        <input type="text" class="text-input search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
         <ul class="sortable connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}">
             <li class="issue">
-                <a data-bind="attr: {href: htmlURL}">
+                <a data-bind="attr: {href: htmlURL}" target="_blank">
                     <strong class="make-block" data-bind="text: number"></strong>
                     <span data-bind="text: title"></span>
                 </a>
@@ -25,7 +27,7 @@
 
         <ul class="sortable connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
             <li class="issue">
-                <a data-bind="attr: {href: htmlURL}">
+                <a data-bind="attr: {href: htmlURL}" target="_blank">
                     <strong class="make-block" data-bind="text: number"></strong>
                     <span data-bind="text: title"></span>
                 </a>
@@ -61,3 +63,41 @@
     </div>
     <!-- /ko -->
 </section>
+
+<!-- add a class "in" to pop this sucker up -->
+<div class="modal-bg">
+    <div class="modal">
+        <h2>Your Github Credentials</h2>
+        <!-- this closes the modal -->
+        <button type="button" class="icon-button close-button">
+            <span class="fa fa-times fa-lg"></span>
+        </button>
+        <ul class="form-list">
+            <li class="form-list-item">
+                <label for="api-key">Github API Key</label>
+                <input id="api-key" name="api-key" type="text" class="text-input">
+            </li>
+            <li class="form-list-item">
+                <label for="repo">
+                     <span class="label-text">Github Repo</span>
+                </label>
+                <input id="repo" name="repo" type="text" class="text-input">
+            </li>
+            <li class="form-list-item">
+                <label for="parse-app-id">
+                    <span class="label-text">Parse App ID</span>
+                </label>
+                <input id="parse-app-id" name="parse-app-id" type="text" class="text-input">
+            </li>
+            <li class="form-list-item">
+                <label for="parse-key">Parse Key</label>
+                <input id="parse-key" name="parse-key" type="text" class="text-input">
+            </li>
+            <li class="form-list-item">
+                <button type="submit" class="button submit-button">Engage</button>
+                <!-- this closes the modal -->
+                <button type="button" class="button secondary-button">Cancel</button>
+            </li>
+        </ul>
+    </div>
+</div>
