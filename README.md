@@ -6,20 +6,10 @@ This page will load all the milestones in a nice kanban-ish card layout. You can
 
 We've always loved using github issues. Now we ♥ using it.
 
+
 #### Demo
 
 Check out http://benweatherman.github.io/githeartissues/ (make sure you follow the configuring section)
-
-
-#### Configuring
-
-You'll need to set some params before anything will load
-```js
-localStorage.setItem('git♥issues:token', '<Github API Key>');  // Generate one at https://github.com/settings/tokens/new
-localStorage.setItem('git♥issues:repo', '<Github Repo>');  // e.g. ordoro/ordoro
-localStorage.setItem('git♥issues:parseAppID', '<Parse App ID>');
-localStorage.setItem('git♥issues:parseKey', '<Parse Key>');
-```
 
 
 #### Building
