@@ -35854,7 +35854,7 @@ var heart = require('../heart');
 window['♥'] = heart;
 heart.show(document.querySelector('body'));
 
-},{"../heart":63}],57:[function(require,module,exports){
+},{"../heart":64}],57:[function(require,module,exports){
 var ko = require('knockout');
 var _ = require('lodash');
 var github = require('./github');
@@ -35902,7 +35902,7 @@ _.extend(Issue.prototype, {
 
 module.exports = Issue;
 
-},{"./User":61,"./github":62,"knockout":13,"lodash":14}],58:[function(require,module,exports){
+},{"./User":61,"./github":63,"knockout":13,"lodash":14}],58:[function(require,module,exports){
 var ko = require('knockout');
 var _ = require('lodash');
 
@@ -35934,7 +35934,7 @@ _.extend(IssueView, {
 
 module.exports = IssueView;
 
-},{"./Issue":57,"./log":66,"knockout":13,"lodash":14}],59:[function(require,module,exports){
+},{"./Issue":57,"./log":67,"knockout":13,"lodash":14}],59:[function(require,module,exports){
 var ko = require('knockout');
 var _ = require('lodash');
 var when = require('when');
@@ -36056,7 +36056,7 @@ _.extend(Milestone.prototype, {
 
 module.exports = Milestone;
 
-},{"./Issue":57,"./github":62,"./log":66,"knockout":13,"lodash":14,"parse":38,"when":55}],60:[function(require,module,exports){
+},{"./Issue":57,"./github":63,"./log":67,"knockout":13,"lodash":14,"parse":38,"when":55}],60:[function(require,module,exports){
 var ko = require('knockout');
 var _ = require('lodash');
 
@@ -36103,6 +36103,63 @@ _.extend(User.prototype, {
 module.exports = User;
 
 },{"knockout":13,"lodash":14}],62:[function(require,module,exports){
+
+
+var _ = require('lodash');
+var ko = require('knockout');
+var when = require('when');
+
+var log = require('../log');
+
+
+ko.extenders.cached = function(target, key) {
+    target.subscribe(function(newValue) {
+        localStorage.setItem(key, newValue);
+    });
+
+    target(localStorage.getItem(key));
+
+    return target;
+};
+
+function CredentialsDialog() {
+    this.visible = ko.observable();
+
+    this.token = ko.observable().extend({cached: 'git♥issues:token'});
+    this.repo = ko.observable().extend({cached: 'git♥issues:repo'});
+    this.parseAppID = ko.observable().extend({cached: 'git♥issues:parseAppID'});
+    this.parseKey = ko.observable().extend({cached: 'git♥issues:parseKey'});
+
+    this.deferred = null;
+}
+
+_.extend(CredentialsDialog.prototype, {
+    template: "<div class=\"modal-bg\" data-bind=\"css: {'in': visible}\">\n    <div class=\"modal\">\n        <h2>Your Github Credentials</h2>\n\n        <ul class=\"form-list\">\n            <li class=\"form-list-item\">\n                <label for=\"api-key\">Github API Key</label>\n                <input id=\"api-key\" name=\"api-key\" type=\"text\" class=\"text-input\" data-bind=\"value: token\">\n            </li>\n            <li class=\"form-list-item\">\n                <label for=\"repo\">\n                     <span class=\"label-text\">Github Repo</span>\n                </label>\n                <input id=\"repo\" name=\"repo\" type=\"text\" class=\"text-input\" data-bind=\"value: repo\">\n            </li>\n            <li class=\"form-list-item\">\n                <label for=\"parse-app-id\">\n                    <span class=\"label-text\">Parse App ID</span>\n                </label>\n                <input id=\"parse-app-id\" name=\"parse-app-id\" type=\"text\" class=\"text-input\" data-bind=\"value: parseAppID\">\n            </li>\n            <li class=\"form-list-item\">\n                <label for=\"parse-key\">Parse Key</label>\n                <input id=\"parse-key\" name=\"parse-key\" type=\"text\" class=\"text-input\" data-bind=\"value: parseKey\">\n            </li>\n            <li class=\"form-list-item\">\n                <button type=\"submit\" class=\"button submit-button fatty\" data-bind=\"click: close\">Donezo</button>\n            </li>\n        </ul>\n    </div>\n</div>\n",
+    open: function() {
+        this.visible(true);
+
+        this.deferred = when.defer();
+
+        return this.deferred.promise;
+    },
+    close: function() {
+        this.visible(false);
+
+        this.deferred.resolve(this.serialize());
+    },
+    serialize: function() {
+        return {
+            token: this.token(),
+            repo: this.repo(),
+            parseAppID: this.parseAppID(),
+            parseKey: this.parseKey()
+        };
+    }
+});
+
+module.exports = CredentialsDialog;
+
+},{"../log":67,"knockout":13,"lodash":14,"when":55}],63:[function(require,module,exports){
 var requests = require('./requests');
 
 var TOKEN = '';
@@ -36142,7 +36199,7 @@ Object.defineProperty(github, 'defaultHeaders', {
 
 module.exports = github;
 
-},{"./requests":67}],63:[function(require,module,exports){
+},{"./requests":68}],64:[function(require,module,exports){
 
 var _ = require('lodash');
 var when = require('when');
@@ -36158,10 +36215,10 @@ var log = require('./log');
 var MilestoneView = require('./MilestoneView');
 var IssueView = require('./IssueView');
 var User = require('./User');
+var CredentialsDialog = require('./credentials/CredentialsDialog');
 
-var heart = {};
-_.extend(heart, {
-    template: "<section class=\"template-wrap clearfix\">\n    <div class=\"sortable-container open-issues-wrap\">\n        <h4 class=\"list-header\">Open Issues</h4>\n        <div class=\"search-wrap\">\n            <input type=\"text\" class=\"search\" data-bind=\"value: allIssuesSearch, valueUpdate: 'input'\">\n        </div>\n        <ul class=\"sortable connected-sortable\" data-bind=\"sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}\">\n            <li class=\"issue\">\n                <a data-bind=\"attr: {href: htmlURL}\">\n                    <strong class=\"make-block\" data-bind=\"text: number\"></strong>\n                    <span data-bind=\"text: title\"></span>\n                </a>\n                <!-- ko if: assignee -->\n                <span class=\"avatar-wrap issue-avatar\">\n                    <img data-bind=\"attr: {src: assignee().avatarURL}\">\n                </span>\n                <!-- /ko -->\n            </li>\n        </ul>\n    </div>\n\n    <!-- ko foreach: milestones -->\n    <div class=\"sortable-container\">\n        <h4 class=\"list-header\" data-bind=\"text: title\"></h3>\n\n        <ul class=\"sortable connected-sortable\" data-bind=\"sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}\">\n            <li class=\"issue\">\n                <a data-bind=\"attr: {href: htmlURL}\">\n                    <strong class=\"make-block\" data-bind=\"text: number\"></strong>\n                    <span data-bind=\"text: title\"></span>\n                </a>\n                <!-- ko if: assignee -->\n                <span class=\"avatar-wrap issue-avatar\">\n                    <img data-bind=\"attr: {src: assignee().avatarURL}\">\n                </span>\n                <!-- /ko -->\n\n                <div class=\"popover-wrapper make-block\" data-bind=\"css: {expanded: assignUserVisible}\">\n                    <button class=\"assign-button\" data-bind=\"click: $root.showAssignUser.bind($root, $parent)\">Assign issue to...</button>\n                    <!-- ko if: assignUserVisible -->\n                    <div class=\"popover\">\n                        <div class=\"popover-inner\">\n                            <ul>\n                                <!-- ko foreach: $root.users -->\n                                <li>\n                                    <button class=\"assign-user-button\" data-bind=\"click: $parent.assignUser.bind($parent)\">\n                                        <span class=\"avatar-wrap make-inline-block popover-avatar\">\n                                            <img data-bind=\"attr: {src: avatarURL}\">\n                                        </span>\n                                        <span class=\"button-text\" data-bind=\"text: login\"></span>\n                                    </button>\n                                </li>\n                                <!-- /ko -->\n                            </ul>\n                        </div>\n                    </div>\n                    <!-- /ko -->\n                </div>\n            </li>\n        </ul>\n    </div>\n    <!-- /ko -->\n</section>\n",
+var heart = {
+    template: "<section class=\"template-wrap clearfix\">\n    <button type=\"button\" class=\"icon-button settings-button\" data-bind=\"click: openCredentialsDialog\">\n        <span class=\"fa fa-gear fa-lg\"></span>\n    </button>\n\n    <div class=\"sortable-container open-issues-wrap\">\n        <h4 class=\"list-header\">Open Issues</h4>\n        <input type=\"text\" class=\"text-input search\" data-bind=\"value: allIssuesSearch, valueUpdate: 'input'\">\n        <ul class=\"sortable connected-sortable\" data-bind=\"sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}\">\n            <li class=\"issue\">\n                <a data-bind=\"attr: {href: htmlURL}\" target=\"_blank\">\n                    <strong class=\"make-block\" data-bind=\"text: number\"></strong>\n                    <span data-bind=\"text: title\"></span>\n                </a>\n                <!-- ko if: assignee -->\n                <span class=\"avatar-wrap issue-avatar\">\n                    <img data-bind=\"attr: {src: assignee().avatarURL}\">\n                </span>\n                <!-- /ko -->\n            </li>\n        </ul>\n    </div>\n\n    <!-- ko foreach: milestones -->\n    <div class=\"sortable-container\">\n        <h4 class=\"list-header\" data-bind=\"text: title\"></h3>\n\n        <ul class=\"sortable connected-sortable\" data-bind=\"sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}\">\n            <li class=\"issue\">\n                <a data-bind=\"attr: {href: htmlURL}\" target=\"_blank\">\n                    <strong class=\"make-block\" data-bind=\"text: number\"></strong>\n                    <span data-bind=\"text: title\"></span>\n                </a>\n                <!-- ko if: assignee -->\n                <span class=\"avatar-wrap issue-avatar\">\n                    <img data-bind=\"attr: {src: assignee().avatarURL}\">\n                </span>\n                <!-- /ko -->\n\n                <div class=\"popover-wrapper make-block\" data-bind=\"css: {expanded: assignUserVisible}\">\n                    <button class=\"assign-button\" data-bind=\"click: $root.showAssignUser.bind($root, $parent)\">Assign issue to...</button>\n                    <!-- ko if: assignUserVisible -->\n                    <div class=\"popover\">\n                        <div class=\"popover-inner\">\n                            <ul>\n                                <!-- ko foreach: $root.users -->\n                                <li>\n                                    <button class=\"assign-user-button\" data-bind=\"click: $parent.assignUser.bind($parent)\">\n                                        <span class=\"avatar-wrap make-inline-block popover-avatar\">\n                                            <img data-bind=\"attr: {src: avatarURL}\">\n                                        </span>\n                                        <span class=\"button-text\" data-bind=\"text: login\"></span>\n                                    </button>\n                                </li>\n                                <!-- /ko -->\n                            </ul>\n                        </div>\n                    </div>\n                    <!-- /ko -->\n                </div>\n            </li>\n        </ul>\n    </div>\n    <!-- /ko -->\n</section>\n\n<div data-bind=\"template: {name: credentialsDialog.template, data: credentialsDialog}\"></div>\n",
     token: ko.observable(),
     repo: ko.observable(),
     parseAppID: ko.observable(),
@@ -36171,6 +36228,16 @@ _.extend(heart, {
     allIssues: ko.observableArray(),
     allIssuesSearch: ko.observable('type:issues no:milestone state:open'),
     users: ko.observableArray(),
+    credentialsDialog: new CredentialsDialog()
+};
+
+_.extend(heart, {
+    isConfigured: ko.computed(function() {
+        var thingies = [this.token(), this.repo(), this.parseAppID(), this.parseKey()],
+            isConfigured = thingies.reduce(function(allConfigured, thingy) { return allConfigured && !!thingy && thingy.length; }, true);
+
+        return isConfigured;
+    }, heart),
     show: function(el) {
         ko.applyBindings(this, el);
     },
@@ -36180,12 +36247,10 @@ _.extend(heart, {
         Parse.initialize(this.parseAppID(), this.parseKey());
     },
     start: function() {
-        if (!this.token() || !this.repo() || !this.parseAppID() || !this.parseKey()) {
-            log.info('Not loading git♥issues because we don\'t have all the config set', this.repo(), this.token(), this.parseAppID(), this.parseKey());
-            return;
-        }
-
         log.log('Fetching milestones for ', this.repo());
+
+        this.milestones.removeAll();
+        this.allIssues.removeAll();
 
         github.get('repos/' + this.repo() + '/milestones')
             .then(function(response) {
@@ -36208,6 +36273,12 @@ _.extend(heart, {
                 log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
+    },
+    loadConfig: function() {
+        this.token(localStorage.getItem('git♥issues:token'));
+        this.repo(localStorage.getItem('git♥issues:repo'));
+        this.parseAppID(localStorage.getItem('git♥issues:parseAppID'));
+        this.parseKey(localStorage.getItem('git♥issues:parseKey'));
     },
     fetchAllIssues: _.debounce(function() {
         if (!this.token() || !this.repo()) {
@@ -36271,6 +36342,15 @@ _.extend(heart, {
         });
 
         issue.assignUserVisible(true);
+    },
+    openCredentialsDialog: function() {
+        this.credentialsDialog.open()
+            .done(function() {
+                this.loadConfig();
+                if (this.isConfigured()) {
+                    this.start();
+                }
+            }.bind(this));
     }
 });
 
@@ -36279,14 +36359,8 @@ heart.token.subscribe(github.initialize.bind(undefined));
 heart.parseAppID.subscribe(heart.initParse.bind(heart));
 heart.parseKey.subscribe(heart.initParse.bind(heart));
 
-var start = _.debounce(heart.start, 100);
-heart.token.subscribe(start, heart);
-heart.repo.subscribe(start, heart);
-heart.parseAppID.subscribe(start, heart);
-heart.parseKey.subscribe(start, heart);
-
 heart.repo.subscribe(function(repo) {
-    var search = this.allIssuesSearch().replace(/repo:[^\s]+/gi, '').replace(/\s{2,}/g, ' ').trim();
+    var search = this.allIssuesSearch().replace(/repo:[^\s]*/gi, '').replace(/\s{2,}/g, ' ').trim();
 
     search += ' repo:' + repo;
     this.allIssuesSearch(search);
@@ -36294,14 +36368,17 @@ heart.repo.subscribe(function(repo) {
 
 heart.allIssuesSearch.subscribe(heart.fetchAllIssues, heart);
 
-heart.token(localStorage.getItem('git♥issues:token'));
-heart.repo(localStorage.getItem('git♥issues:repo'));
-heart.parseAppID(localStorage.getItem('git♥issues:parseAppID'));
-heart.parseKey(localStorage.getItem('git♥issues:parseKey'));
+heart.loadConfig();
+if (heart.isConfigured()) {
+    heart.start();
+}
+else {
+    heart.openCredentialsDialog();
+}
 
 module.exports = heart;
 
-},{"./IssueView":58,"./MilestoneView":60,"./User":61,"./github":62,"./lib/knockout-sortable":64,"./lib/knockout-string-template":65,"./log":66,"knockout":13,"lodash":14,"parse":38,"when":55}],64:[function(require,module,exports){
+},{"./IssueView":58,"./MilestoneView":60,"./User":61,"./credentials/CredentialsDialog":62,"./github":63,"./lib/knockout-sortable":65,"./lib/knockout-string-template":66,"./log":67,"knockout":13,"lodash":14,"parse":38,"when":55}],65:[function(require,module,exports){
 // knockout-sortable 0.8.8 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     var sortable = require('jquery-ui/sortable');
@@ -36629,7 +36706,7 @@ module.exports = heart;
 
 });
 
-},{"jquery":12,"jquery-ui/sortable":10,"knockout":13}],65:[function(require,module,exports){
+},{"jquery":12,"jquery-ui/sortable":10,"knockout":13}],66:[function(require,module,exports){
 /**
  * Out of the box, knockout only allows you to specify a selector ID of a `script` tag
  * as a template. This template engine extends this functionality where if a script with
@@ -36680,14 +36757,14 @@ ko.setTemplateEngine(engine);
 
 module.exports = engine;
 
-},{"MD5":1,"knockout":13}],66:[function(require,module,exports){
+},{"MD5":1,"knockout":13}],67:[function(require,module,exports){
 var log = console || {
 
 };
 
 module.exports = log;
 
-},{}],67:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 var when = require('when');
 var _ = require('lodash');
 
