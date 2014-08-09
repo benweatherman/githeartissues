@@ -36250,7 +36250,6 @@ _.extend(heart, {
         log.log('Fetching milestones for ', this.repo());
 
         this.milestones.removeAll();
-        this.allIssues.removeAll();
 
         github.get('repos/' + this.repo() + '/milestones')
             .then(function(response) {
