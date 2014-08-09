@@ -15,28 +15,46 @@ var IssueView = require('./IssueView');
 var User = require('./User');
 var CredentialsDialog = require('./credentials/CredentialsDialog');
 
-var heart = {
-    template: fs.readFileSync(__dirname + '/index.html', 'utf8'),
-    token: ko.observable(),
-    repo: ko.observable(),
-    parseAppID: ko.observable(),
-    parseKey: ko.observable(),
-    fetching: ko.observable(false),
-    milestones: ko.observableArray(),
-    allIssues: ko.observableArray(),
-    allIssuesSearch: ko.observable('type:issues no:milestone state:open'),
-    users: ko.observableArray(),
-    credentialsDialog: new CredentialsDialog()
-};
+function Heart() {
+    this.template = fs.readFileSync(__dirname + '/index.html', 'utf8');
+    this.token = ko.observable();
+    this.repo = ko.observable();
+    this.parseAppID = ko.observable();
+    this.parseKey = ko.observable();
+    this.fetching = ko.observable(false);
+    this.milestones = ko.observableArray();
+    this.allIssues = ko.observableArray();
+    this.allIssuesSearch = ko.observable('type:issues no:milestone state:open');
+    this.users = ko.observableArray();
+    this.credentialsDialog = new CredentialsDialog();
 
-_.extend(heart, {
-    isConfigured: ko.computed(function() {
+    this.isConfigured = ko.computed(this.getIsConfigured, this);
+
+    this.token.subscribe(github.initialize.bind(undefined));
+    this.parseAppID.subscribe(this.initParse, this);
+    this.parseKey.subscribe(this.initParse, this);
+
+    this.repo.subscribe(this.updateRepoInSearch, this);
+
+    this.allIssuesSearch.subscribe(this.fetchAllIssues, this);
+}
+
+_.extend(Heart.prototype, {
+    getIsConfigured: function() {
         var thingies = [this.token(), this.repo(), this.parseAppID(), this.parseKey()],
             isConfigured = thingies.reduce(function(allConfigured, thingy) { return allConfigured && !!thingy && thingy.length; }, true);
 
         return isConfigured;
-    }, heart),
-    show: function(el) {
+    },
+    start: function(el) {
+        this.loadConfig();
+        if (this.isConfigured()) {
+            this.loadData();
+        }
+        else {
+            this.openCredentialsDialog();
+        }
+
         ko.applyBindings(this, el);
     },
     initParse: function() {
@@ -44,7 +62,7 @@ _.extend(heart, {
 
         Parse.initialize(this.parseAppID(), this.parseKey());
     },
-    start: function() {
+    loadData: function() {
         log.log('Fetching milestones for ', this.repo());
 
         this.milestones.removeAll();
@@ -93,7 +111,13 @@ _.extend(heart, {
                 log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
-    }, 500, heart),
+    }, 500, Heart.prototype),
+    updateRepoInSearch: function(repo) {
+        var search = this.allIssuesSearch().replace(/repo:[^\s]*/gi, '').replace(/\s{2,}/g, ' ').trim();
+
+        search += ' repo:' + repo;
+        this.allIssuesSearch(search);
+    },
     issueMovedToMilestone: function(options, evt, ui) {
         var issue = options.item;
         var source = options.sourceParent();
@@ -145,32 +169,10 @@ _.extend(heart, {
             .done(function() {
                 this.loadConfig();
                 if (this.isConfigured()) {
-                    this.start();
+                    this.loadData();
                 }
             }.bind(this));
     }
 });
 
-heart.token.subscribe(github.initialize.bind(undefined));
-
-heart.parseAppID.subscribe(heart.initParse.bind(heart));
-heart.parseKey.subscribe(heart.initParse.bind(heart));
-
-heart.repo.subscribe(function(repo) {
-    var search = this.allIssuesSearch().replace(/repo:[^\s]*/gi, '').replace(/\s{2,}/g, ' ').trim();
-
-    search += ' repo:' + repo;
-    this.allIssuesSearch(search);
-}, heart);
-
-heart.allIssuesSearch.subscribe(heart.fetchAllIssues, heart);
-
-heart.loadConfig();
-if (heart.isConfigured()) {
-    heart.start();
-}
-else {
-    heart.openCredentialsDialog();
-}
-
-module.exports = heart;
+module.exports = Heart;

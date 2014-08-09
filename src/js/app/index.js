@@ -1,4 +1,4 @@
-var heart = require('../heart');
+var Heart = require('../heart');
 
-window['♥'] = heart;
-heart.show(document.querySelector('body'));
+var heart = window['♥'] = new Heart();
+heart.start(document.querySelector('body'));
