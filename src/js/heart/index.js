@@ -158,7 +158,7 @@ heart.parseAppID.subscribe(heart.initParse.bind(heart));
 heart.parseKey.subscribe(heart.initParse.bind(heart));
 
 heart.repo.subscribe(function(repo) {
-    var search = this.allIssuesSearch().replace(/repo:[^\s]+/gi, '').replace(/\s{2,}/g, ' ').trim();
+    var search = this.allIssuesSearch().replace(/repo:[^\s]*/gi, '').replace(/\s{2,}/g, ' ').trim();
 
     search += ' repo:' + repo;
     this.allIssuesSearch(search);
@@ -169,6 +169,9 @@ heart.allIssuesSearch.subscribe(heart.fetchAllIssues, heart);
 heart.loadConfig();
 if (heart.isConfigured()) {
     heart.start();
+}
+else {
+    heart.openCredentialsDialog();
 }
 
 module.exports = heart;
