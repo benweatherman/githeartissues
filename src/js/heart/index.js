@@ -13,9 +13,9 @@ var log = require('./log');
 var MilestoneView = require('./MilestoneView');
 var IssueView = require('./IssueView');
 var User = require('./User');
+var CredentialsDialog = require('./credentials/CredentialsDialog');
 
-var heart = {};
-_.extend(heart, {
+var heart = {
     template: fs.readFileSync(__dirname + '/index.html', 'utf8'),
     token: ko.observable(),
     repo: ko.observable(),
@@ -26,6 +26,16 @@ _.extend(heart, {
     allIssues: ko.observableArray(),
     allIssuesSearch: ko.observable('type:issues no:milestone state:open'),
     users: ko.observableArray(),
+    credentialsDialog: new CredentialsDialog()
+};
+
+_.extend(heart, {
+    isConfigured: ko.computed(function() {
+        var thingies = [this.token(), this.repo(), this.parseAppID(), this.parseKey()],
+            isConfigured = thingies.reduce(function(allConfigured, thingy) { return allConfigured && !!thingy && thingy.length; }, true);
+
+        return isConfigured;
+    }, heart),
     show: function(el) {
         ko.applyBindings(this, el);
     },
@@ -35,12 +45,10 @@ _.extend(heart, {
         Parse.initialize(this.parseAppID(), this.parseKey());
     },
     start: function() {
-        if (!this.token() || !this.repo() || !this.parseAppID() || !this.parseKey()) {
-            log.info('Not loading git♥issues because we don\'t have all the config set', this.repo(), this.token(), this.parseAppID(), this.parseKey());
-            return;
-        }
-
         log.log('Fetching milestones for ', this.repo());
+
+        this.milestones.removeAll();
+        this.allIssues.removeAll();
 
         github.get('repos/' + this.repo() + '/milestones')
             .then(function(response) {
@@ -63,6 +71,12 @@ _.extend(heart, {
                 log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
+    },
+    loadConfig: function() {
+        this.token(localStorage.getItem('git♥issues:token'));
+        this.repo(localStorage.getItem('git♥issues:repo'));
+        this.parseAppID(localStorage.getItem('git♥issues:parseAppID'));
+        this.parseKey(localStorage.getItem('git♥issues:parseKey'));
     },
     fetchAllIssues: _.debounce(function() {
         if (!this.token() || !this.repo()) {
@@ -126,6 +140,15 @@ _.extend(heart, {
         });
 
         issue.assignUserVisible(true);
+    },
+    openCredentialsDialog: function() {
+        this.credentialsDialog.open()
+            .done(function() {
+                this.loadConfig();
+                if (this.isConfigured()) {
+                    this.start();
+                }
+            }.bind(this));
     }
 });
 
@@ -133,12 +156,6 @@ heart.token.subscribe(github.initialize.bind(undefined));
 
 heart.parseAppID.subscribe(heart.initParse.bind(heart));
 heart.parseKey.subscribe(heart.initParse.bind(heart));
-
-var start = _.debounce(heart.start, 100);
-heart.token.subscribe(start, heart);
-heart.repo.subscribe(start, heart);
-heart.parseAppID.subscribe(start, heart);
-heart.parseKey.subscribe(start, heart);
 
 heart.repo.subscribe(function(repo) {
     var search = this.allIssuesSearch().replace(/repo:[^\s]+/gi, '').replace(/\s{2,}/g, ' ').trim();
@@ -149,9 +166,9 @@ heart.repo.subscribe(function(repo) {
 
 heart.allIssuesSearch.subscribe(heart.fetchAllIssues, heart);
 
-heart.token(localStorage.getItem('git♥issues:token'));
-heart.repo(localStorage.getItem('git♥issues:repo'));
-heart.parseAppID(localStorage.getItem('git♥issues:parseAppID'));
-heart.parseKey(localStorage.getItem('git♥issues:parseKey'));
+heart.loadConfig();
+if (heart.isConfigured()) {
+    heart.start();
+}
 
 module.exports = heart;

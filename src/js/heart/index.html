@@ -1,12 +1,14 @@
 <section class="template-wrap clearfix">
+    <button type="button" class="icon-button settings-button" data-bind="click: openCredentialsDialog">
+        <span class="fa fa-gear fa-lg"></span>
+    </button>
+
     <div class="sortable-container open-issues-wrap">
         <h4 class="list-header">Open Issues</h4>
-        <div class="search-wrap">
-            <input type="text" class="search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
-        </div>
+        <input type="text" class="text-input search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
         <ul class="sortable connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}">
             <li class="issue">
-                <a data-bind="attr: {href: htmlURL}">
+                <a data-bind="attr: {href: htmlURL}" target="_blank">
                     <strong class="make-block" data-bind="text: number"></strong>
                     <span data-bind="text: title"></span>
                 </a>
@@ -25,7 +27,7 @@
 
         <ul class="sortable connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
             <li class="issue">
-                <a data-bind="attr: {href: htmlURL}">
+                <a data-bind="attr: {href: htmlURL}" target="_blank">
                     <strong class="make-block" data-bind="text: number"></strong>
                     <span data-bind="text: title"></span>
                 </a>
@@ -61,3 +63,5 @@
     </div>
     <!-- /ko -->
 </section>
+
+<div data-bind="template: {name: credentialsDialog.template, data: credentialsDialog}"></div>
