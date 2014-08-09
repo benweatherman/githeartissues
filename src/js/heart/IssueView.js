@@ -22,7 +22,7 @@ _.extend(IssueView.prototype, Issue.prototype, {
 });
 
 _.extend(IssueView, {
-    createFromIssue: function(issue) {
+    clone: function(issue) {
         return new IssueView(issue.data);
     }
 });

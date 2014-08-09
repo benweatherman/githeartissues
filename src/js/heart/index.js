@@ -138,7 +138,7 @@ _.extend(Heart.prototype, {
             issue.milestoneNumber(targetMilestone.number()).save();
         }
 
-        this.milestones().forEach(function(milestone) { milestone.saveSortOrder(milestone.issueViews()); });
+        this.milestones().forEach(function(milestone) { milestone.savePriorities(); });
     },
     issueRemovedFromMilestone: function(options, evt, ui) {
         var issue = options.item;
