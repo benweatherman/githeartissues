@@ -7,16 +7,26 @@ var github = {
         TOKEN = token;
     },
     get: function(url, params) {
-        var fullURL = this.getURL(url);
+        var fullURL = this.formatURL(url);
 
         return requests.get(fullURL, params, this.defaultHeaders);
     },
+    post: function(url, data) {
+        var fullURL = this.formatURL(url);
+
+        return requests.post(fullURL, data, this.defaultHeaders);
+    },
     patch: function(url, data) {
-        var fullURL = this.getURL(url);
+        var fullURL = this.formatURL(url);
 
         return requests.patch(fullURL, data, this.defaultHeaders);
     },
-    getURL: function(url) {
+    delete: function(url) {
+        var fullURL = this.formatURL(url);
+
+        return requests.delete(fullURL, this.defaultHeaders);
+    },
+    formatURL: function(url) {
         if (!/^https:/.test(url)) {
             return 'https://api.github.com/' + url;
         }
