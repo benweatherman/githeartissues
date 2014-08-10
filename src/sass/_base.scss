@@ -4,6 +4,9 @@
 @import 'icons';
 @import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css';
 
+// http://www.paletton.com/#uid=30s0u0kQytz00yfuMPRRRgD++00
+$primary-color: #EC6600;
+
 html, body {
     height: 100%;
     font-size: 100%;
@@ -167,7 +170,7 @@ ul, li {
     padding: .25em .5em;
     &:focus {
         outline: none;
-        border: 2px solid #6EB43A;
+        border: 2px solid $primary-color;
         color: #444;
     }
 
@@ -190,7 +193,7 @@ ul, li {
 .button {
     border-radius: .25em;
     @include transition(all .5s ease-out 0);
-    border: 2px solid darken(#6EB43A, 15%);
+    border: 2px solid darken($primary-color, 15%);
     box-shadow: rgba(255, 255, 255, 0.3) 0 1px 0 inset;
     color: #fff;
     text-shadow: rgba(0,0,0,.3) 0 1px 0;
@@ -198,14 +201,14 @@ ul, li {
     font-family: "Arimo", sans-serif;
     font-size: 1em;
     font-weight: 700;
-    @include background-image(linear-gradient(#6EB43A, darken(#6EB43A, 7%)));
+    @include background-image(linear-gradient($primary-color, darken($primary-color, 7%)));
     text-transform: uppercase;
     padding: .75em 2em;
     &:hover, &:focus {
         cursor: pointer;
-        @include background-image(linear-gradient(#6EB43A, darken(#6EB43A, 10%)));
+        @include background-image(linear-gradient($primary-color, darken($primary-color, 10%)));
         box-shadow: rgba(255, 255, 255, 0.3) 0 1px 0 inset;
-        border: 2px solid darken(#6EB43A, 20%);
+        border: 2px solid darken($primary-color, 20%);
         box-shadow: rgba(255, 255, 255, 0.5) 0 1px 0 inset;
     }
 }
