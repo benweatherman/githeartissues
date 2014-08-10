@@ -14,7 +14,6 @@
  * <div data-bind="template: {name: '<span>I\'m already in the DOM</span>'}"></div>
  */
 var ko = require('knockout');
-var md5 = require('MD5');
 
 var engine = new ko.nativeTemplateEngine();
 var originalMakeTemplateSource = engine.makeTemplateSource;
@@ -27,7 +26,7 @@ engine.makeTemplateSource = function(template, doc) {
     catch(e) {
         // If we've gotten here, the original template source didn't know how to handle this type
         // of template. We'll assume it's a string and go with god.
-        var key = md5(template);
+        var key = btoa(template);
 
         if (!cachedTemplates[key]) {
             var el = ko.utils.parseHtmlFragment('<div>' + template + '</div>')[0];
