@@ -26797,7 +26797,7 @@ _.extend(IssuePriority.prototype, {
                 }
 
                 var data = {
-                    message: (fileInfo ? 'Updated' : 'Created') + ' config for ' + this.milestoneName,
+                    message: (fileInfo ? 'Updated' : 'Created') + ' issue priority for ' + this.milestoneName,
                     content: content,
                     branch: this.branch,
                     sha: fileInfo && fileInfo.sha
