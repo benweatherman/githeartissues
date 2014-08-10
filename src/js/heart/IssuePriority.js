@@ -1,54 +1,73 @@
 var _ = require('lodash');
 var when = require('when');
-var Parse = require('parse');
+var github = require('./github');
 
-var IssuePriorityStorage = Parse.Object.extend('IssueOrdering', {
-    initialize: function(attrs, options) {
-        this.set('numbers', []);
-    }
-});
+var log = require('./log');
 
-function IssuePriority(repo, milestoneNumber) {
+
+function IssuePriority(repo, milestone, milestoneName, branch) {
     this.repo = repo;
-    this.milestoneNumber = milestoneNumber;
+    this.milestone = milestone;
+    this.milestoneName = milestoneName;
+    this.branch = branch;
 
-    this.storage = null;
-
-    var query = new Parse.Query(IssuePriorityStorage);
-    this.query = query.equalTo('repo', repo).equalTo('milestone', milestoneNumber);
+    this.filename = 'milestone-' + this.milestone + '.json';
+    this.githubFilePath = 'repos/' + this.repo + '/contents/milestones/' + this.filename;
+    this.cached = null;
 }
 
 _.extend(IssuePriority.prototype, {
-    cached: null,
     get: function() {
-        if (this.cached !== null) {
-            return when.resolve(this.cached);
-        }
-
-        return this.getStorage()
-            .then(function(storageObj) {
-                return storageObj.get('numbers');
-            });
+        return this.cached || (this.cached = this.readFile());
     },
     save: function(issueNumbers) {
-        this.cached = issueNumbers;
-
-        return this.getStorage()
-                    .then(function() {
-                        this.storage.set('numbers', issueNumbers);
-                        return this.storage.save();
-                    }.bind(this));
+        return this.writeFile(issueNumbers);
     },
-    getStorage: function() {
-        if (this.storage) { return when.resolve(this.storage); }
+    readFile: function() {
+        return this.getFile()
+            .then(function(fileInfo) {
+                return JSON.parse(atob(fileInfo.content));
+            })
+            .catch(function(err) {
+                log.warn('No config file for ', this.filename, err);
+                return [];
+            }.bind(this));
+    },
+    writeFile: function(issueNumbers) {
+        return this.getFile()
+            .catch(function() {
+                return null;
+            })
+            .then(function(fileInfo) {
+                var content = btoa(JSON.stringify(issueNumbers)) + '\n';
 
-        return this.query.first()
+                log.log('Comparing old and new content for', this.milestoneName, content.trim(), '===', fileInfo && fileInfo.content.trim(), '=>', fileInfo && fileInfo.content === content);
+
+                if (fileInfo && fileInfo.content === content) {
+                    return fileInfo;
+                }
+
+                var data = {
+                    message: (fileInfo ? 'Updated' : 'Created') + ' issue priority for ' + this.milestoneName,
+                    content: content,
+                    branch: this.branch,
+                    sha: fileInfo && fileInfo.sha
+                };
+
+                return github.put(this.githubFilePath, data)
                     .then(function(response) {
-                        this.storage = response ? response : new IssuePriorityStorage({repo: this.repo, milestone: this.milestoneNumber});
-
-                        return this.storage;
-                    }.bind(this));
+                        var fileInfo = _.extend({}, response.content, {content: content});
+                        return fileInfo;
+                    });
+            }.bind(this))
+            .then(function(fileInfo) {
+                this.__file = when.resolve(fileInfo);
+                this.cached = when.resolve(issueNumbers);
+            }.bind(this));
     },
+    getFile: function() {
+        return this.__file || (this.__file = github.get(this.githubFilePath, {ref: this.branch}));
+    }
 });
 
 module.exports = IssuePriority;

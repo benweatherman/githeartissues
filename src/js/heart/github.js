@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var requests = require('./requests');
 
 var TOKEN = '';
@@ -6,20 +7,25 @@ var github = {
     initialize: function(token) {
         TOKEN = token;
     },
-    get: function(url, params) {
+    get: function(url, params, headers) {
         var fullURL = this.formatURL(url);
 
-        return requests.get(fullURL, params, this.defaultHeaders);
+        return requests.get(fullURL, params, _.extend(this.defaultHeaders, headers));
     },
-    post: function(url, data) {
+    post: function(url, data, headers) {
         var fullURL = this.formatURL(url);
 
-        return requests.post(fullURL, data, this.defaultHeaders);
+        return requests.post(fullURL, data, _.extend(this.defaultHeaders, headers));
     },
-    patch: function(url, data) {
+    put: function(url, data, headers) {
         var fullURL = this.formatURL(url);
 
-        return requests.patch(fullURL, data, this.defaultHeaders);
+        return requests.put(fullURL, data, _.extend(this.defaultHeaders, headers));
+    },
+    patch: function(url, data, headers) {
+        var fullURL = this.formatURL(url);
+
+        return requests.patch(fullURL, data, _.extend(this.defaultHeaders, headers));
     },
     delete: function(url) {
         var fullURL = this.formatURL(url);
@@ -38,7 +44,7 @@ var github = {
 Object.defineProperty(github, 'defaultHeaders', {
     get: function() {
         return {
-            Accept: 'application/vnd.github.raw+json',
+            Accept: 'application/json',
             'Content-Type': 'application/json;charset=UTF-8',
             'Authorization': 'token ' + TOKEN
         };

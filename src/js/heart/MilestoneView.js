@@ -6,14 +6,18 @@ var Milestone = require('./Milestone');
 var IssueView = require('./IssueView');
 var IssuePriority = require('./IssuePriority');
 
-function MilestoneView(data, repo) {
+var DEFAULT_SAVE_DELAY = 15000;
+
+function MilestoneView(data, repo, dataBranch) {
     Milestone.call(this, data, repo);
 
     this.issueViews = ko.observableArray();
     // Subscribe to a change rather than making it a computed because the drag/drop stuff doesn't like computeds
     this.issues.subscribe(this.createViews, this);
 
-    this.priorities = new IssuePriority(repo, this.number());
+    this.priorities = new IssuePriority(repo, this.number(), this.title(), dataBranch);
+
+    this.savePriorities = _.debounce(this._savePriorities, DEFAULT_SAVE_DELAY, this);
 }
 
 _.extend(MilestoneView.prototype, Milestone.prototype, {
@@ -50,10 +54,10 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
 
         return sortedIssues;
     },
-    savePriorities: function() {
+    _savePriorities: function() {
         var issueNumbers = this.issueViews().map(function(issue) { return issue.number(); });
 
-        log.log('Saving issue ordering for milestone', this.number(), this.title(), ':', issueNumbers);
+        log.info('Saving issue ordering for milestone', this.number(), this.title(), ':', issueNumbers);
 
         return this.priorities.save(issueNumbers);
     }

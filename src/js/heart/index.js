@@ -1,12 +1,12 @@
 var fs = require('fs');
 var _ = require('lodash');
 var when = require('when');
+var sequence = require('when/sequence');
 var ko = require('knockout');
 
 var _koSortable = require('./lib/knockout-sortable');
 var _koStringTemplate = require('./lib/knockout-string-template');
 
-var Parse = require('parse');
 var github = require('./github');
 
 var log = require('./log');
@@ -19,20 +19,16 @@ function Heart() {
     this.template = fs.readFileSync(__dirname + '/index.html', 'utf8');
     this.token = ko.observable();
     this.repo = ko.observable();
-    this.parseAppID = ko.observable();
-    this.parseKey = ko.observable();
-    this.fetching = ko.observable(false);
+    this.branch = ko.observable();
     this.milestones = ko.observableArray();
     this.allIssues = ko.observableArray();
     this.allIssuesSearch = ko.observable('type:issues no:milestone state:open');
     this.users = ko.observableArray();
     this.credentialsDialog = new CredentialsDialog();
 
-    this.isConfigured = ko.computed(this.getIsConfigured, this);
+    this.isConfigured = ko.computed(function() { return this.token() && this.token().length && this.repo() && this.repo().length && this.branch() && this.branch().length; }, this);
 
     this.token.subscribe(github.initialize.bind(undefined));
-    this.parseAppID.subscribe(this.initParse, this);
-    this.parseKey.subscribe(this.initParse, this);
 
     this.repo.subscribe(this.updateRepoInSearch, this);
 
@@ -40,12 +36,7 @@ function Heart() {
 }
 
 _.extend(Heart.prototype, {
-    getIsConfigured: function() {
-        var thingies = [this.token(), this.repo(), this.parseAppID(), this.parseKey()],
-            isConfigured = thingies.reduce(function(allConfigured, thingy) { return allConfigured && !!thingy && thingy.length; }, true);
-
-        return isConfigured;
-    },
+    github: github,
     start: function(el) {
         this.loadConfig();
         if (this.isConfigured()) {
@@ -57,11 +48,6 @@ _.extend(Heart.prototype, {
 
         ko.applyBindings(this, el);
     },
-    initParse: function() {
-        if (!this.parseAppID() || !this.parseKey()) { return; }
-
-        Parse.initialize(this.parseAppID(), this.parseKey());
-    },
     loadData: function() {
         log.log('Fetching milestones for ', this.repo());
 
@@ -69,7 +55,7 @@ _.extend(Heart.prototype, {
 
         github.get('repos/' + this.repo() + '/milestones')
             .then(function(response) {
-                return response.map(function(m) { return new MilestoneView(m, this.repo()); }, this);
+                return response.map(function(m) { return new MilestoneView(m, this.repo(), this.branch()); }, this);
             }.bind(this))
             .tap(this.milestones.bind(this))
             .catch(function(e) {
@@ -90,10 +76,9 @@ _.extend(Heart.prototype, {
             }.bind(this));
     },
     loadConfig: function() {
-        this.token(localStorage.getItem('git♥issues:token'));
-        this.repo(localStorage.getItem('git♥issues:repo'));
-        this.parseAppID(localStorage.getItem('git♥issues:parseAppID'));
-        this.parseKey(localStorage.getItem('git♥issues:parseKey'));
+        this.token(this.credentialsDialog.token());
+        this.repo(this.credentialsDialog.repo());
+        this.branch(this.credentialsDialog.branch());
     },
     fetchAllIssues: _.debounce(function() {
         if (!this.token() || !this.repo()) {
@@ -138,7 +123,8 @@ _.extend(Heart.prototype, {
             issue.milestoneNumber(targetMilestone.number()).save();
         }
 
-        this.milestones().forEach(function(milestone) { milestone.savePriorities(); });
+        var tasks = this.milestones().map(function(milestone) { return milestone.savePriorities.bind(milestone); });
+        sequence(tasks);
     },
     issueRemovedFromMilestone: function(options, evt, ui) {
         var issue = options.item;
@@ -149,7 +135,8 @@ _.extend(Heart.prototype, {
 
         issue.milestoneNumber('').save();
 
-        this.milestones().forEach(function(milestone) { milestone.saveSortOrder(milestone.issueViews()); });
+        var tasks = this.milestones().map(function(milestone) { return milestone.savePriorities.bind(milestone); });
+        sequence(tasks);
     },
     showAssignUser: function(milestoneView, issue) {
         if (issue.assignUserVisible()) {

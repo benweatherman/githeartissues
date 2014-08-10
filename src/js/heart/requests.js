@@ -23,7 +23,7 @@ var requests = {
         xhr.onload = function(event) {
             // Sometimes webkit gets a little trigger happy and calls this multiple times
             // https://code.google.com/p/chromium/issues/detail?id=159827
-            if (done) return;
+            if (done) { return; }
             done = true;
 
             var logFn = xhr.status > 299 ? console.error : console.log;
@@ -36,7 +36,7 @@ var requests = {
             if (xhr.status >= 200 && xhr.status < 400) {
                 deferred.resolve(JSON.parse(xhr.responseText));
             }
-            else if (/application\/json/i.test(contentType)) {
+            else if (/application\/[\w\.-]*?json/i.test(contentType)) {
                 deferred.reject(JSON.parse(xhr.responseText));
             }
             else {
