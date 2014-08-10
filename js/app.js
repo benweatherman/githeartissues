@@ -26754,9 +26754,10 @@ var github = require('./github');
 var log = require('./log');
 
 
-function IssuePriority(repo, milestone, branch) {
+function IssuePriority(repo, milestone, milestoneName, branch) {
     this.repo = repo;
     this.milestone = milestone;
+    this.milestoneName = milestoneName;
     this.branch = branch;
 
     this.filename = 'milestone-' + this.milestone + '.json';
@@ -26789,14 +26790,14 @@ _.extend(IssuePriority.prototype, {
             .then(function(fileInfo) {
                 var content = btoa(JSON.stringify(issueNumbers)) + '\n';
 
-                log.log('Comparing old and new content', content.trim(), '===', fileInfo && fileInfo.content.trim(), '=>', fileInfo && fileInfo.content === content);
+                log.log('Comparing old and new content for', this.milestoneName, content.trim(), '===', fileInfo && fileInfo.content.trim(), '=>', fileInfo && fileInfo.content === content);
 
                 if (fileInfo && fileInfo.content === content) {
                     return fileInfo;
                 }
 
                 var data = {
-                    message: (fileInfo ? 'Created' : 'Updated') + ' config file for milestone ' + this.milestone,
+                    message: (fileInfo ? 'Updated' : 'Created') + ' config for ' + this.milestoneName,
                     content: content,
                     branch: this.branch,
                     sha: fileInfo && fileInfo.sha
@@ -26919,7 +26920,7 @@ function MilestoneView(data, repo, dataBranch) {
     // Subscribe to a change rather than making it a computed because the drag/drop stuff doesn't like computeds
     this.issues.subscribe(this.createViews, this);
 
-    this.priorities = new IssuePriority(repo, this.number(), dataBranch);
+    this.priorities = new IssuePriority(repo, this.number(), this.title(), dataBranch);
 }
 
 _.extend(MilestoneView.prototype, Milestone.prototype, {
@@ -27736,7 +27737,7 @@ var requests = {
             if (xhr.status >= 200 && xhr.status < 400) {
                 deferred.resolve(JSON.parse(xhr.responseText));
             }
-            else if (/application\/\w*?json/i.test(contentType)) {
+            else if (/application\/[\w\.-]*?json/i.test(contentType)) {
                 deferred.reject(JSON.parse(xhr.responseText));
             }
             else {
