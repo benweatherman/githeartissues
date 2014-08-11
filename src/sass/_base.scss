@@ -43,6 +43,9 @@ ul, li {
         .list-header {
             border-top: 2px solid #ccc;
         }
+        .sortable {
+            min-height: 1em;
+        }
     }
 
     .sortable {
@@ -209,7 +212,7 @@ ul, li {
 .error-message {
     background: #ff0000;
     color: #fff;
-    padding: .5em .5em;
+    padding: .7em;
     border-radius: 0 0 .5em .5em;
     -webkit-font-smoothing: antialiased;
     font-size: .85em;
@@ -222,6 +225,29 @@ ul, li {
         margin: .35em 0;
         .make-block {
             margin-bottom: .3em;
+        }
+    }
+}
+
+.helper-message {
+    background: #777;
+    color: lighten(#ffff00, 30%);
+    padding: .5em .75em;
+    border-radius: 0 0 .5em .5em;
+    -webkit-font-smoothing: antialiased;
+    font-size: .85em;
+    line-height: 1.35;
+    font-weight: bold;
+    margin-top: -.35em;
+    display: block;
+    position: relative;
+    pre {
+        color: #fff;
+        line-height: 1;
+        white-space: normal;
+        margin: .75em 0;
+        .make-block {
+            margin-bottom: .75em;
         }
     }
 }
