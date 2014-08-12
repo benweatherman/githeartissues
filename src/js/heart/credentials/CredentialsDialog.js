@@ -42,7 +42,7 @@ function CredentialsDialog() {
     this.repo.subscribe(this.validateRepo, this);
 
     this.branch = ko.observable().extend({cached: 'git♥issues:branch'});
-    this.showBranchInstructions = ko.observable(true);
+    this.showBranchInstructions = ko.observable(false);
     this.branch.subscribe(_.debounce(this.setShowBranchInstructions, 500), this);
 
     this.deferred = null;
