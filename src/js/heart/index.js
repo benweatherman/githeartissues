@@ -98,8 +98,10 @@ _.extend(Heart.prototype, {
             }.bind(this));
     }, 500, Heart.prototype),
     saveAllMilestonePriorities: _.debounce(function() {
+        if (!this.branch() || !this.branch().length) { return when.resolve([]); }
+
         var tasks = this.milestones().map(function(milestone) { return milestone.savePriorities.bind(milestone); });
-        sequence(tasks);
+        return sequence(tasks);
     }, 10000, Heart.prototype),
     updateRepoInSearch: function(repo) {
         var search = this.allIssuesSearch().replace(/repo:[^\s]*/gi, '').replace(/\s{2,}/g, ' ').trim();
