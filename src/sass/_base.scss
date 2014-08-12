@@ -43,11 +43,15 @@ ul, li {
         .list-header {
             border-top: 2px solid #ccc;
         }
+        .sortable {
+            min-height: 1em;
+        }
     }
 
     .sortable {
         padding-left: 0;
         margin-top: .5em;
+        min-height: 25em;
     }
 }
 
@@ -153,6 +157,9 @@ ul, li {
         display: block;
         margin-bottom: .1em;
         text-shadow: rgba(255,255,255, .6) 0 1px 0;
+        a, a:hover {
+            color: #111;
+        }
     }
     &:last-of-type {
         margin-bottom: 0;
@@ -170,10 +177,46 @@ ul, li {
     padding: .25em .5em;
     &:focus {
         outline: none;
-        border: 2px solid $primary-color;
+        border: 2px solid #444;
         color: #444;
     }
 
+}
+
+.error-message {
+    display: none;
+}
+
+.error {
+    label {
+        color: #ff0000;
+    }
+    .text-input {
+        border-color: #ff0000;
+        color: #ff0000;
+        &:focus {
+            color: #444;
+        }
+    }
+    .error-message {
+        background: #ff0000;
+        color: #fff;
+        padding: .7em;
+        border-radius: 0 0 .5em .5em;
+        -webkit-font-smoothing: antialiased;
+        font-size: .85em;
+        font-weight: bold;
+        margin-top: -.35em;
+        display: block;
+        position: relative;
+        pre {
+            white-space: normal;
+            margin: .35em 0;
+            .make-block {
+                margin-bottom: .3em;
+            }
+        }
+    }
 }
 
 .search {
@@ -186,6 +229,29 @@ ul, li {
     &:focus {
         width: 175%;
         box-shadow: rgba(255,255,255,.7) 0 0em 2em;
+    }
+}
+
+.helper-message {
+    background: #777;
+    color: lighten(#ffff00, 30%);
+    padding: .5em .75em;
+    border-radius: 0 0 .5em .5em;
+    -webkit-font-smoothing: antialiased;
+    font-size: .85em;
+    line-height: 1.35;
+    font-weight: bold;
+    margin-top: -.35em;
+    display: block;
+    position: relative;
+    pre {
+        color: #fff;
+        line-height: 1;
+        white-space: normal;
+        margin: .75em 0;
+        .make-block {
+            margin-bottom: .75em;
+        }
     }
 }
 
@@ -206,12 +272,14 @@ ul, li {
     padding: .75em 2em;
     &:hover, &:focus {
         cursor: pointer;
-        @include background-image(linear-gradient($primary-color, darken($primary-color, 10%)));
+        outline: none;
+        @include background-image(linear-gradient($primary-color, darken($primary-color, 12%)));
         box-shadow: rgba(255, 255, 255, 0.3) 0 1px 0 inset;
         border: 2px solid darken($primary-color, 20%);
         box-shadow: rgba(255, 255, 255, 0.5) 0 1px 0 inset;
     }
 }
+
 .secondary-button, .secondary-button:hover {
     background: transparent;
     text-transform: none;
@@ -224,14 +292,18 @@ ul, li {
 .secondary-button:hover {
     color: #777;
 }
-//Helpers
 
+
+//Helpers
 .make-block {display: block;}
 .make-inline-block {display: inline-block;}
 .clearfix:after {
   content: "";
   display: table;
   clear: both;
+}
+.right {
+    float: right;
 }
 .fatty {
     width: 100%;
