@@ -16,8 +16,6 @@ function MilestoneView(data, repo, dataBranch) {
     this.issues.subscribe(this.createViews, this);
 
     this.priorities = new IssuePriority(repo, this.number(), this.title(), dataBranch);
-
-    this.savePriorities = _.debounce(this._savePriorities, DEFAULT_SAVE_DELAY, this);
 }
 
 _.extend(MilestoneView.prototype, Milestone.prototype, {
@@ -54,7 +52,7 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
 
         return sortedIssues;
     },
-    _savePriorities: function() {
+    savePriorities: function() {
         var issueNumbers = this.issueViews().map(function(issue) { return issue.number(); });
 
         log.info('Saving issue ordering for milestone', this.number(), this.title(), ':', issueNumbers);

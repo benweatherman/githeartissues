@@ -97,6 +97,10 @@ _.extend(Heart.prototype, {
                 throw Error(msg);
             }.bind(this));
     }, 500, Heart.prototype),
+    saveAllMilestonePriorities: _.debounce(function() {
+        var tasks = this.milestones().map(function(milestone) { return milestone.savePriorities.bind(milestone); });
+        sequence(tasks);
+    }, 10000, Heart.prototype),
     updateRepoInSearch: function(repo) {
         var search = this.allIssuesSearch().replace(/repo:[^\s]*/gi, '').replace(/\s{2,}/g, ' ').trim();
 
@@ -123,8 +127,7 @@ _.extend(Heart.prototype, {
             issue.milestoneNumber(targetMilestone.number()).save();
         }
 
-        var tasks = this.milestones().map(function(milestone) { return milestone.savePriorities.bind(milestone); });
-        sequence(tasks);
+        this.saveAllMilestonePriorities();
     },
     issueRemovedFromMilestone: function(options, evt, ui) {
         var issue = options.item;
@@ -135,8 +138,7 @@ _.extend(Heart.prototype, {
 
         issue.milestoneNumber('').save();
 
-        var tasks = this.milestones().map(function(milestone) { return milestone.savePriorities.bind(milestone); });
-        sequence(tasks);
+        this.saveAllMilestonePriorities();
     },
     showAssignUser: function(milestoneView, issue) {
         if (issue.assignUserVisible()) {
