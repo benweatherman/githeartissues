@@ -26,7 +26,7 @@ function Heart() {
     this.users = ko.observableArray();
     this.credentialsDialog = new CredentialsDialog();
 
-    this.isConfigured = ko.computed(function() { return this.token() && this.token().length && this.repo() && this.repo().length && this.branch() && this.branch().length; }, this);
+    this.isConfigured = ko.computed(function() { return this.token() && this.token().length && this.repo() && this.repo().length; }, this);
 
     this.token.subscribe(github.initialize.bind(undefined));
 

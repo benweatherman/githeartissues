@@ -31,16 +31,19 @@ function CredentialsDialog() {
     this.visible = ko.observable();
 
     this.token = ko.observable().extend({cached: 'git♥issues:token'});
+    this.tokenError = ko.observable(false);
+    this.token.subscribe(github.initialize, github);
+    this.token.subscribe(this.checkForDefaultBranch, this);
+    this.token.subscribe(this.validateToken, this);
+
     this.repo = ko.observable().extend({cached: 'git♥issues:repo'});
+    this.repoError = ko.observable(false);
+    this.repo.subscribe(this.checkForDefaultBranch, this);
+    this.repo.subscribe(this.validateRepo, this);
+
     this.branch = ko.observable().extend({cached: 'git♥issues:branch'});
-    this.branchExists = ko.observable(true);
-
-    this.token.subscribe(github.initialize.bind(undefined));
-
-    this.token.subscribe(this.checkForDefaultBranch.bind(this));
-    this.repo.subscribe(this.checkForDefaultBranch.bind(this));
-
-    this.branch.subscribe(_.debounce(this.setBranchExists, 500), this);
+    this.showBranchInstructions = ko.observable(true);
+    this.branch.subscribe(_.debounce(this.setShowBranchInstructions, 500), this);
 
     this.deferred = null;
 }
@@ -48,7 +51,7 @@ function CredentialsDialog() {
 _.extend(CredentialsDialog.prototype, {
     template: fs.readFileSync(__dirname + '/CredentialsDialog.html', 'utf8'),
     open: function() {
-        this.setBranchExists(this.branch());
+        this.setShowBranchInstructions(this.branch());
 
         this.checkForDefaultBranch();
 
@@ -70,6 +73,22 @@ _.extend(CredentialsDialog.prototype, {
             branch: this.branch()
         };
     },
+    validateToken: function() {
+        if (!this.token() || !this.token().length) { this.tokenError(true); return; }
+
+        github.get('user/repos')
+            .then(this.tokenError.bind(this, false))
+            .catch(this.tokenError.bind(this, true));
+
+        this.tokenError(false);
+    },
+    validateRepo: function() {
+        if (!this.token() || !this.token().length || !this.repo() || !this.repo().length) { this.repoError(true); return; }
+
+        github.get('repos/' + this.repo() + '/git/refs/heads')
+            .then(this.repoError.bind(this, false))
+            .catch(this.repoError.bind(this, true));
+    },
     checkForDefaultBranch: function() {
         if (this.branch() && this.branch().length) { return; }
 
@@ -80,12 +99,14 @@ _.extend(CredentialsDialog.prototype, {
                 }
             }.bind(this));
     },
-    setBranchExists: function(branch) {
+    setShowBranchInstructions: function(branch) {
+        if (!branch || !branch.length) { this.showBranchInstructions(false); return; }
+
         this.doesBranchExist(branch)
             .then(function(exists) {
-                this.branchExists(exists);
+                this.showBranchInstructions(!exists);
             }.bind(this))
-            .catch(this.branchExists.bind(false));
+            .catch(this.showBranchInstructions.bind(false));
     },
     doesBranchExist: function(branch) {
         return github.get('repos/' + this.repo() + '/git/refs/heads')

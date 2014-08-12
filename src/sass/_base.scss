@@ -183,6 +183,10 @@ ul, li {
 
 }
 
+.error-message {
+    display: none;
+}
+
 .error {
     label {
         color: #ff0000;
@@ -192,6 +196,25 @@ ul, li {
         color: #ff0000;
         &:focus {
             color: #444;
+        }
+    }
+    .error-message {
+        background: #ff0000;
+        color: #fff;
+        padding: .7em;
+        border-radius: 0 0 .5em .5em;
+        -webkit-font-smoothing: antialiased;
+        font-size: .85em;
+        font-weight: bold;
+        margin-top: -.35em;
+        display: block;
+        position: relative;
+        pre {
+            white-space: normal;
+            margin: .35em 0;
+            .make-block {
+                margin-bottom: .3em;
+            }
         }
     }
 }
@@ -206,26 +229,6 @@ ul, li {
     &:focus {
         width: 175%;
         box-shadow: rgba(255,255,255,.7) 0 0em 2em;
-    }
-}
-
-.error-message {
-    background: #ff0000;
-    color: #fff;
-    padding: .7em;
-    border-radius: 0 0 .5em .5em;
-    -webkit-font-smoothing: antialiased;
-    font-size: .85em;
-    font-weight: bold;
-    margin-top: -.35em;
-    display: block;
-    position: relative;
-    pre {
-        white-space: normal;
-        margin: .35em 0;
-        .make-block {
-            margin-bottom: .3em;
-        }
     }
 }
 
