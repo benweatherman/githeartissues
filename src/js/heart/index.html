@@ -23,7 +23,7 @@
 
     <!-- ko foreach: milestones -->
     <div class="sortable-container">
-        <h4 class="list-header" data-bind="text: title"></h3>
+        <a class="list-header" data-bind="text: title, attr: {href: url}"></a>
 
         <ul class="sortable connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
             <li class="issue">

@@ -1,19 +1,26 @@
 var gulp = require('gulp');
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
 
-gulp.task('build-js-app', function() {
+function build(minify) {
+    var browserify = require('browserify');
+    var source = require('vinyl-source-stream');
+    var buffer = require('vinyl-buffer');
+    var sourcemaps = require('gulp-sourcemaps');
+    var uglify = require('gulp-uglify');
+    var gulpif = require('gulp-if');
 
-    var bundler = browserify({
-        entries: ['./src/js/app/index.js'],
-        extensions: ['.js'],
-        debug: true
-    });
-
-    return bundler
+    return browserify({
+            entries: ['./src/js/app/index.js'],
+            extensions: ['.js']
+        })
         .bundle()
         .pipe(source('app.js'))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(gulpif(minify, uglify()))
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./dist/js/'));
-});
+}
 
-gulp.task('build-js', ['build-js-app']);
+gulp.task('build-js', build.bind(undefined, false));
+
+gulp.task('build-js-app', build.bind(undefined, true));

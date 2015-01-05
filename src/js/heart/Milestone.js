@@ -12,6 +12,7 @@ function Milestone(data, repo) {
     this.title = ko.observable();
     this.description = ko.observable();
     this.issues = ko.observableArray();
+    this.url = ko.observable();
 
     this.load(data);
 }
@@ -23,6 +24,7 @@ _.extend(Milestone.prototype, {
         this.number(data.number);
         this.title(data.title);
         this.description(data.description);
+        this.url(data.url.replace(/api\.|repos\//g, ''));
 
         this.fetchIssues();
     },
