@@ -73,15 +73,27 @@ html, body {
 .subcontent--drawer {
     padding: 0 1em 1em 1em;
     background: #ddd;
-    width: 14em;
+    @include display(flex);
+    @include flex(0 0 14em);
+    @include flex-direction(column);
     position: absolute;
-    display: block;
-    left: -20%;
-    .list-header {
+    z-index: 2;
+    left: -14em;
+    max-height: 100%;
+    width: 14em;
+    .subheader {
         border-top: 2px solid #ccc;
     }
     .sortable {
         min-height: 1em;
+    }
+}
+
+.drawer-in {
+    padding-left: 13em;
+
+    .subcontent--drawer {
+        left: 0;
     }
 }
 
@@ -105,6 +117,10 @@ html, body {
         border-radius: 10px;
         background: rgba(0,0,0,.15);
     }
+}
+
+.list--drawer {
+    padding-right: 1em;
 }
 
 .list__item {
@@ -292,10 +308,13 @@ html, body {
 }
 
 .search {
-    margin-bottom: .75em;
+    margin: 1.25em 0 .5em 0;
     font-size: .7em;
     padding: .25em .5em .25em 2.35em;
     position: relative;
+    width: 90%;
+    @include display(flex);
+    @include flex(0 0 3em);
     z-index: 10;
     background: #fff url(http://449b5aa70d3b497fd542-78ae780b3f7953ce47f76a52edee37a4.r48.cf2.rackcdn.com/search-grey-16.png) .5em .65em no-repeat;
     &:focus {
