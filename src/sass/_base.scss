@@ -35,7 +35,6 @@ html, body {
 .subcontent-wrap {
     @include display(flex);
     @include flex-direction(row);
-    @include flex-wrap(nowrap);
     position: absolute;
     top: 0;
     right: 0;
@@ -61,7 +60,9 @@ html, body {
 }
 
 .subcontent {
+    @include display(flex);
     @include flex(0 0 12em);
+    @include flex-direction(column);
     margin-left: 1.75em;
     max-height: 100%;
     &:first-of-type {
@@ -85,10 +86,25 @@ html, body {
 }
 
 .list {
-    padding-left: 0;
+    padding: 0 .5em 0 0;
     margin-top: .5em;
-    min-height: 25em;
+    overflow-x: hidden;
+    overflow-y: auto;
     font-size: .9em;
+    &::-webkit-scrollbar {
+        height: .5em;
+        width: .5em;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: rgba(0,0,0,.3);
+    }
+
+    &::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background: rgba(0,0,0,.15);
+    }
 }
 
 .list__item {
@@ -105,16 +121,22 @@ html, body {
         display: block;
         word-wrap: break-word;
         text-decoration: none;
+
         span {
             color: #777;
         }
-        strong {font-size: 1.1em;
+
+        strong {
+            font-size: 1.1em;
             color: #444;
         }
+
         &:hover {
+
             span {
                 color: #444;
             }
+
             strong {
                 color: #111;
             }
