@@ -1,13 +1,14 @@
-<section class="template-wrap clearfix">
-    <button type="button" class="icon-button settings-button" data-bind="click: openCredentialsDialog">
+<section class="content clearfix">
+
+    <button type="button" class="btn--icon btn--settings" data-bind="click: openCredentialsDialog">
         <span class="fa fa-gear fa-lg"></span>
     </button>
 
-    <div class="sortable-container open-issues-wrap">
-        <h4 class="list-header">Open Issues</h4>
+    <div class="subcontent--drawer">
+        <h4 class="subheader">Open Issues</h4>
         <input type="text" class="text-input search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
-        <ul class="sortable connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}">
-            <li class="issue">
+        <ul class="list connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}">
+            <li class="list__item">
                 <a data-bind="attr: {href: htmlURL}" target="_blank">
                     <strong class="make-block" data-bind="text: number"></strong>
                     <span data-bind="text: title"></span>
@@ -20,48 +21,53 @@
             </li>
         </ul>
     </div>
+    <div class="subcontent-wrap--outer" style="height: 750px">
+        <div class="subcontent-wrap">
+            <!-- ko foreach: milestones -->
+            <div class="subcontent">
+                <h4 class="subheader">
+                    <a class="subheader__link" data-bind="text: title, attr: {href: url}"></a>
+                </h4>
 
-    <!-- ko foreach: milestones -->
-    <div class="sortable-container">
-        <a class="list-header" data-bind="text: title, attr: {href: url}"></a>
+                <ul class="list connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
+                    <li class="list__item">
+                        <a data-bind="attr: {href: htmlURL}" target="_blank">
+                            <strong class="make-block" data-bind="text: number"></strong>
+                            <span data-bind="text: title"></span>
+                        </a>
+                        <!-- ko if: assignee -->
+                        <span class="avatar-wrap issue-avatar">
+                            <img data-bind="attr: {src: assignee().avatarURL}">
+                        </span>
+                        <!-- /ko -->
 
-        <ul class="sortable connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
-            <li class="issue">
-                <a data-bind="attr: {href: htmlURL}" target="_blank">
-                    <strong class="make-block" data-bind="text: number"></strong>
-                    <span data-bind="text: title"></span>
-                </a>
-                <!-- ko if: assignee -->
-                <span class="avatar-wrap issue-avatar">
-                    <img data-bind="attr: {src: assignee().avatarURL}">
-                </span>
-                <!-- /ko -->
-
-                <div class="popover-wrapper make-block" data-bind="css: {expanded: assignUserVisible}">
-                    <button class="assign-button" data-bind="click: $root.showAssignUser.bind($root, $parent)">Assign issue to...</button>
-                    <!-- ko if: assignUserVisible -->
-                    <div class="popover">
-                        <div class="popover-inner">
-                            <ul>
-                                <!-- ko foreach: $root.users -->
-                                <li>
-                                    <button class="assign-user-button" data-bind="click: $parent.assignUser.bind($parent)">
-                                        <span class="avatar-wrap make-inline-block popover-avatar">
-                                            <img data-bind="attr: {src: avatarURL}">
-                                        </span>
-                                        <span class="button-text" data-bind="text: login"></span>
-                                    </button>
-                                </li>
-                                <!-- /ko -->
-                            </ul>
+                        <div class="popover-wrapper make-block" data-bind="css: {expanded: assignUserVisible}">
+                            <button class="assign-button" data-bind="click: $root.showAssignUser.bind($root, $parent)">Assign issue to...</button>
+                            <!-- ko if: assignUserVisible -->
+                            <div class="popover">
+                                <div class="popover-inner">
+                                    <ul>
+                                        <!-- ko foreach: $root.users -->
+                                        <li>
+                                            <button class="assign-user-button" data-bind="click: $parent.assignUser.bind($parent)">
+                                                <span class="avatar-wrap make-inline-block popover-avatar">
+                                                    <img data-bind="attr: {src: avatarURL}">
+                                                </span>
+                                                <span class="button-text" data-bind="text: login"></span>
+                                            </button>
+                                        </li>
+                                        <!-- /ko -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- /ko -->
                         </div>
-                    </div>
-                    <!-- /ko -->
-                </div>
-            </li>
-        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- /ko -->
+        </div>
     </div>
-    <!-- /ko -->
 </section>
 
 <div data-bind="template: {name: credentialsDialog.template, data: credentialsDialog}"></div>

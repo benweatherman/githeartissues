@@ -1,7 +1,6 @@
 @import 'bourbon';
 @import 'neat';
 @import 'fonts';
-@import 'icons';
 @import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css';
 
 // http://www.paletton.com/#uid=30s0u0kQytz00yfuMPRRRgD++00
@@ -14,48 +13,87 @@ html, body {
     margin: 0;
 }
 
-body {
+.page {
     font-family: 'Arimo', sans-serif;
     color: #444;
     background: #eee;
-    width: 90%;
-    margin-right: auto;
-    margin-left: auto;
-    overflow-x: scroll;
+    position: relative;
+    text-align: center;
 }
 
-ul, li {
-    list-style-type: none;
+.content {
+    width: 92%;
+    margin: 0 auto;
+    text-align: left;
+    overflow: hidden;
+}
+
+.subcontent-wrap--outer {
+    position: relative;
+}
+
+.subcontent-wrap {
+    @include display(flex);
+    @include flex-direction(row);
+    @include flex-wrap(nowrap);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    &::-webkit-scrollbar {
+        height: .85em;
+        width: .85em;
+        margin-top: .5em;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: rgba(0,0,0,.4);
+    }
+
+    &::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background: rgba(0,0,0,.2);
+    }
+}
+
+.subcontent {
+    @include flex(0 0 12em);
+    margin-left: 1.75em;
+    max-height: 100%;
+    &:first-of-type {
+        margin-left: 0;
+    }
+}
+
+.subcontent--drawer {
+    padding: 0 1em 1em 1em;
+    background: #ddd;
+    width: 14em;
+    position: absolute;
+    display: block;
+    left: -20%;
+    .list-header {
+        border-top: 2px solid #ccc;
+    }
+    .sortable {
+        min-height: 1em;
+    }
+}
+
+.list {
+    padding-left: 0;
+    margin-top: .5em;
+    min-height: 25em;
     font-size: .9em;
 }
 
-.template-wrap {
-    min-width: 101em;
-    .sortable-container {
-        @include span-columns(2);
-        width: 12em;
-    }
-
-    .open-issues-wrap {
-        padding: 0 1em 1em 1em;
-        background: #ddd;
-        width: 14em;
-        .list-header {
-            border-top: 2px solid #ccc;
-        }
-        .sortable {
-            min-height: 1em;
-        }
-    }
-
-    .sortable {
-        padding-left: 0;
-        margin-top: .5em;
-        min-height: 25em;
-    }
-}
-
-.issue {
+.list__item {
+    font-size: .9em;
+    list-style-type: none;
     margin: 0 0 1em 0;
     background: #fff;
     box-shadow: rgba(0,0,0,.2) 0 .1em .2em;
@@ -84,12 +122,21 @@ ul, li {
     }
 }
 
-.list-header {
+.subheader {
     margin-bottom: .5em;
     padding-top: .5em;
     border-top: 2px solid #ddd;
     text-shadow: rgba(255,255,255, .6) 0 1px 0;
 }
+
+    .subheader__link {
+        color: #444;
+        text-decoration: none;
+        &:hover {
+            color: #111;
+            border-bottom: 1px dotted #aaa;
+        }
+    }
 
 .avatar-wrap {
     width: 1.5em;
@@ -149,10 +196,13 @@ ul, li {
 
 .form-list {
     padding-left: 0;
+    font-size: .9em;
 }
-.form-list-item {
+
+.form-list__item {
     font-size: 1.25em;
     margin-bottom: 1.15em;
+    list-style-type: none;
     label {
         display: block;
         margin-bottom: .1em;
@@ -256,7 +306,7 @@ ul, li {
 }
 
 //Buttons
-.button {
+.btn {
     border-radius: .25em;
     @include transition(all .5s ease-out 0);
     border: 2px solid darken($primary-color, 15%);
@@ -280,6 +330,41 @@ ul, li {
     }
 }
 
+.btn--icon {
+    margin: 0;
+    background: transparent;
+    @include transition(all .3s ease-out 0);
+    margin-bottom: 0;
+    border: 0;
+    padding: 0;
+    text-align: left;
+    display: inline-block;
+    font-size: 1em;
+    opacity: .2;
+    &:hover, &:focus {
+        outline: none;
+        opacity: .5;
+        cursor: pointer;
+    }
+
+}
+
+.btn--settings {
+    position: absolute;
+    left: .35em;
+    top: .25em;
+    line-height: 1.5;
+    padding: .15em .35em .25em .35em;
+    background: #eee;
+}
+
+.btn--close {
+    position: absolute;
+    top: .35em;
+    right: .5em;
+}
+
+
 .secondary-button, .secondary-button:hover {
     background: transparent;
     text-transform: none;
@@ -296,15 +381,15 @@ ul, li {
 
 //Helpers
 .make-block {display: block;}
+
 .make-inline-block {display: inline-block;}
+
 .clearfix:after {
-  content: "";
-  display: table;
-  clear: both;
+    content: "";
+    display: table;
+    clear: both;
 }
-.right {
-    float: right;
-}
-.fatty {
-    width: 100%;
-}
+
+.right {float: right;}
+
+.full-width {width: 100%;}
