@@ -74,6 +74,12 @@ html, body {
     &:first-of-type {
         margin-left: 0;
     }
+    &.ui-sortable-helper {
+        padding: 0 1em;
+        border: 3px dashed #fff;
+        box-shadow: rgba(0,0,0,.25) 0 .25em 1.25em;
+        background: #ccc;
+    }
 }
 
 .subcontent--drawer {
