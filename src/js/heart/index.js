@@ -23,6 +23,8 @@ function Heart() {
     this.milestones = ko.observableArray();
     this.allIssues = ko.observableArray();
     this.allIssuesSearch = ko.observable('type:issues no:milestone state:open');
+    this.allIssuesVisible = ko.observable(JSON.parse(localStorage.getItem('allIssuesVisible')));
+    this.allIssuesVisible.subscribe(localStorage.setItem.bind(localStorage, 'allIssuesVisible'));
     this.users = ko.observableArray();
     this.credentialsDialog = new CredentialsDialog();
 
