@@ -27,7 +27,8 @@
             </li>
         </ul>
     </div>
-    <div class="subcontent-wrap--outer" style="height: 750px">
+    <!-- NEED TO HAVE THIS DIV AUTOMATICALLY RESIZE LIKE TRELLO CONTAINTER DOES -->
+    <div class="subcontent-wrap--outer" style="height: 800px">
         <div class="subcontent-wrap">
             <!-- ko foreach: milestones -->
             <div class="subcontent">
@@ -47,19 +48,19 @@
                         </button>
                         <!-- /ko -->
 
-                        <div class="popover-wrapper make-block" data-bind="css: {expanded: assignUserVisible}">
-                            <button class="assign-button" data-bind="click: $root.showAssignUser.bind($root, $parent)">Assign issue to...</button>
+                        <div class="popover-wrap" data-bind="css: {expanded: assignUserVisible}">
+                            <button type="button" class="btn--popover" data-bind="click: $root.showAssignUser.bind($root, $parent)">Assign issue to...</button>
                             <!-- ko if: assignUserVisible -->
                             <div class="popover">
                                 <div class="popover-inner">
-                                    <ul>
+                                    <ul class="popover-list">
                                         <!-- ko foreach: $root.users -->
-                                        <li>
-                                            <button class="assign-user-button" data-bind="click: $parent.assignUser.bind($parent)">
+                                        <li class="popover-list__item">
+                                            <button class="btn--assign" data-bind="click: $parent.assignUser.bind($parent)">
                                                 <span class="avatar make-inline-block">
                                                     <img class="img--avatar" data-bind="attr: {src: avatarURL}">
                                                 </span>
-                                                <span class="button-text" data-bind="text: login"></span>
+                                                <span class="btn--assign-text" data-bind="text: login"></span>
                                             </button>
                                         </li>
                                         <!-- /ko -->
