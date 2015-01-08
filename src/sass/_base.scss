@@ -26,6 +26,7 @@ html, body {
     margin: 0 auto;
     text-align: left;
     overflow: hidden;
+    @include transition(all 0.3s ease-out 0);
 }
 
 .subcontent-wrap--outer {
@@ -42,6 +43,7 @@ html, body {
     left: 0;
     overflow-x: auto;
     overflow-y: hidden;
+
     &::-webkit-scrollbar {
         height: .85em;
         width: .85em;
@@ -76,17 +78,21 @@ html, body {
     @include display(flex);
     @include flex(0 0 14em);
     @include flex-direction(column);
+    @include transition(all 0.3s ease-out 0);
     position: absolute;
     z-index: 2;
-    left: -14em;
+    left: -14.02em;
     max-height: 100%;
     width: 14em;
+
     .subheader {
         border-top: 2px solid #ccc;
     }
+
     .sortable {
         min-height: 1em;
     }
+
 }
 
 .drawer-in {
@@ -94,6 +100,20 @@ html, body {
 
     .subcontent--drawer {
         left: 0;
+    }
+
+    .btn--toggle {
+        right: .8em;
+        font-size: 1em;
+        padding: 0;
+    }
+
+    .hide--drawer-in {
+        display: none;
+    }
+
+    .hide--drawer-out {
+        display: inline-block;
     }
 }
 
@@ -231,7 +251,6 @@ html, body {
 
 
 //Forms
-
 .form-list {
     padding-left: 0;
     font-size: .9em;
@@ -346,6 +365,7 @@ html, body {
     }
 }
 
+
 //Buttons
 .btn {
     border-radius: .25em;
@@ -380,11 +400,11 @@ html, body {
     padding: 0;
     text-align: left;
     display: inline-block;
-    font-size: 1em;
-    opacity: .2;
+    font-size: .8em;
+    opacity: .3;
     &:hover, &:focus {
         outline: none;
-        opacity: .5;
+        opacity: .6;
         cursor: pointer;
     }
 
@@ -392,11 +412,34 @@ html, body {
 
 .btn--settings {
     position: absolute;
-    left: .35em;
-    top: .25em;
+    left: .0;
+    top: 0;
     line-height: 1.5;
-    padding: .15em .35em .25em .35em;
-    background: #eee;
+    padding: .1em .25em;
+    z-index: 3;
+}
+
+.btn--toggle {
+    text-align: center;
+    opacity: 1;
+    position: absolute;
+    top: 1.85em;
+    right: -1.75em;
+    padding: .5em;
+    border-radius: 0 .25em .25em 0;
+    background: #ddd;
+
+    .fa {
+        opacity: .3;
+    }
+
+    &:hover {
+        opacity: 1;
+            .fa {
+            opacity: .6;
+        }
+    }
+
 }
 
 .btn--close {
@@ -404,7 +447,6 @@ html, body {
     top: .35em;
     right: .5em;
 }
-
 
 .secondary-button, .secondary-button:hover {
     background: transparent;
@@ -415,6 +457,7 @@ html, body {
     color: #999;
     padding: .75em;
 }
+
 .secondary-button:hover {
     color: #777;
 }
@@ -422,6 +465,10 @@ html, body {
 
 //Helpers
 .make-block {display: block;}
+
+.hide--drawer-out {
+    display: none;
+}
 
 .make-inline-block {display: inline-block;}
 
