@@ -194,6 +194,19 @@ html, body {
     }
 }
 
+.list--tags {
+    padding: 0 1em;
+    margin-bottom: 0;
+    position: relative;
+    top: -0.75em;
+}
+
+.list__item--tag {
+    display: inline-block;
+    height: .5em;
+    width: 1.25em;
+}
+
 .subheader {
     margin-bottom: .5em;
     padding-top: .5em;
