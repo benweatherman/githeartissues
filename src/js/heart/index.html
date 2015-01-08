@@ -1,4 +1,4 @@
-<section class="content drawer-in clearfix">
+<section class="content clearfix">
 
     <button type="button" class="btn--icon btn--settings" data-bind="click: openCredentialsDialog">
         <span class="fa fa-gear fa-lg"></span>
@@ -9,7 +9,9 @@
             <span class="fa fa-chevron-right hide--drawer-in" title="See all open issues"></span>
             <span class="fa fa-times hide--drawer-out"  title="Hide all open issues"></span>
         </button>
-        <h4 class="subheader">Open Issues</h4>
+        <h4 class="subheader">
+            <a class="subheader__link" href="https://github.com/ordoro/ordoro/issues" target="_blank">Open Issues</a>
+        </h4>
         <input type="text" class="text-input search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
         <ul class="list list--drawer connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}">
             <li class="list__item">
@@ -18,9 +20,9 @@
                     <span data-bind="text: title"></span>
                 </a>
                 <!-- ko if: assignee -->
-                <span class="avatar-wrap issue-avatar">
-                    <img data-bind="attr: {src: assignee().avatarURL}">
-                </span>
+                <button type="button" class="btn--avatar">
+                    <img class="img--avatar" data-bind="attr: {src: assignee().avatarURL}">
+                </button>
                 <!-- /ko -->
             </li>
         </ul>
@@ -30,9 +32,8 @@
             <!-- ko foreach: milestones -->
             <div class="subcontent">
                 <h4 class="subheader">
-                    <a class="subheader__link" data-bind="text: title, attr: {href: url}"></a>
+                    <a class="subheader__link" data-bind="text: title, attr: {href: url}" target="_blank"></a>
                 </h4>
-
                 <ul class="list connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
                     <li class="list__item">
                         <a data-bind="attr: {href: htmlURL}" target="_blank">
@@ -40,9 +41,10 @@
                             <span data-bind="text: title"></span>
                         </a>
                         <!-- ko if: assignee -->
-                        <span class="avatar-wrap issue-avatar">
-                            <img data-bind="attr: {src: assignee().avatarURL}">
-                        </span>
+                        <button type="button" class="btn--avatar">
+                            <img class="img--avatar" data-bind="attr: {src: assignee().avatarURL}">
+                            <span class="fa fa-times"  title="Unassign this user"></span>
+                        </button>
                         <!-- /ko -->
 
                         <div class="popover-wrapper make-block" data-bind="css: {expanded: assignUserVisible}">
@@ -54,8 +56,8 @@
                                         <!-- ko foreach: $root.users -->
                                         <li>
                                             <button class="assign-user-button" data-bind="click: $parent.assignUser.bind($parent)">
-                                                <span class="avatar-wrap make-inline-block popover-avatar">
-                                                    <img data-bind="attr: {src: avatarURL}">
+                                                <span class="avatar make-inline-block">
+                                                    <img class="img--avatar" data-bind="attr: {src: avatarURL}">
                                                 </span>
                                                 <span class="button-text" data-bind="text: login"></span>
                                             </button>
