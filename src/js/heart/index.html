@@ -19,16 +19,13 @@
                     <strong class="make-block" data-bind="text: number"></strong>
                     <span data-bind="text: title"></span>
                 </a>
-                <ul class="list--tags">
-                    <li class="list__item--tag" style="background-color: #02d7e1"></li>
-                    <li class="list__item--tag" style="background-color: #d7e102"></li>
-                    <li class="list__item--tag" style="background-color: #dddddd"></li>
-                    <li class="list__item--tag" style="background-color: #d7e102"></li>
-                    <li class="list__item--tag" style="background-color: #fad8c7"></li>
-                    <li class="list__item--tag" style="background-color: #e10c02"></li>
-                    <li class="list__item--tag" style="background-color: #d4c5f9"></li>
-                    <li class="list__item--tag" style="background-color: #12eb45"></li>
+
+                <!-- ko if: labels().length -->
+                <ul class="list--tags" data-bind="foreach: labels">
+                    <li class="list__item--tag" data-bind="style: {'background-color': color}"></li>
                 </ul>
+                <!-- /ko -->
+
                 <!-- ko if: assignee -->
                 <button type="button" class="btn--avatar">
                     <img class="img--avatar" data-bind="attr: {src: assignee().avatarURL}">
@@ -37,8 +34,8 @@
             </li>
         </ul>
     </div>
-    <!-- NEED TO HAVE THIS DIV AUTOMATICALLY RESIZE LIKE TRELLO CONTAINTER DOES -->
-    <div class="subcontent-wrap--outer" style="height: 800px">
+
+    <div class="subcontent-wrap--outer" data-bind="style: {height: heightStyle}">
         <div class="subcontent-wrap">
             <!-- ko foreach: milestones -->
             <div class="subcontent">
@@ -51,16 +48,13 @@
                             <strong class="make-block" data-bind="text: number"></strong>
                             <span data-bind="text: title"></span>
                         </a>
-                        <ul class="list--tags">
-                            <li class="list__item--tag" style="background-color: #02d7e1"></li>
-                            <li class="list__item--tag" style="background-color: #d7e102"></li>
-                            <li class="list__item--tag" style="background-color: #dddddd"></li>
-                            <li class="list__item--tag" style="background-color: #d7e102"></li>
-                            <li class="list__item--tag" style="background-color: #fad8c7"></li>
-                            <li class="list__item--tag" style="background-color: #e10c02"></li>
-                            <li class="list__item--tag" style="background-color: #d4c5f9"></li>
-                            <li class="list__item--tag" style="background-color: #12eb45"></li>
+
+                        <!-- ko if: labels().length -->
+                        <ul class="list--tags" data-bind="foreach: labels">
+                            <li class="list__item--tag" data-bind="style: {'background-color': color}"></li>
                         </ul>
+                        <!-- /ko -->
+
                         <!-- ko if: assignee -->
                         <button type="button" class="btn--avatar">
                             <img class="img--avatar" data-bind="attr: {src: assignee().avatarURL}">
