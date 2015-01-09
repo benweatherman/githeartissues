@@ -3,6 +3,7 @@ var _ = require('lodash');
 var github = require('./github');
 
 var User = require('./User');
+var Label = require('./Label');
 
 function Issue(data) {
     this.number = ko.observable();
@@ -13,6 +14,7 @@ function Issue(data) {
 
     this.assignee = ko.observable();
     this.milestoneNumber = ko.observable();
+    this.labels = ko.observableArray();
 
     this.load(data);
 }
@@ -30,6 +32,9 @@ _.extend(Issue.prototype, {
         if (data.assignee) {
             this.assignee(new User(data.assignee));
         }
+
+        var labels = data.labels.map(function(label) { return new Label(label); });
+        this.labels(labels);
 
         this.milestoneNumber(data.milestone && data.milestone.number);
     },
