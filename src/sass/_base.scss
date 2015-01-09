@@ -137,6 +137,7 @@ html, body {
     overflow-x: hidden;
     overflow-y: auto;
     font-size: .9em;
+    min-height: 30em;
     &::-webkit-scrollbar {
         height: .5em;
         width: .5em;
