@@ -61,14 +61,16 @@
                             <li class="list__item--tag" style="background-color: #d4c5f9"></li>
                             <li class="list__item--tag" style="background-color: #12eb45"></li>
                         </ul>
-                        <!-- ko if: assignee -->
-                        <button type="button" class="btn--avatar">
-                            <img class="img--avatar" data-bind="attr: {src: assignee().avatarURL}">
-                            <span class="fa fa-times"  title="Unassign this user"></span>
+                        <button type="button" class="btn--icon btn--remove">
+                            <span class="fa fa-times"  title="Remove issue from milestone"></span>
                         </button>
-                        <!-- /ko -->
-
                         <div class="popover-wrap" data-bind="css: {expanded: assignUserVisible}">
+                            <!-- ko if: assignee -->
+                            <button type="button" class="btn--avatar">
+                                <img class="img--avatar" data-bind="attr: {src: assignee().avatarURL}">
+                                <span class="fa fa-times"  title="Unassign this user"></span>
+                            </button>
+                            <!-- /ko -->
                             <button type="button" class="btn--popover" data-bind="click: $root.showAssignUser.bind($root, $parent)">Assign issue to...</button>
                             <!-- ko if: assignUserVisible -->
                             <div class="popover">
