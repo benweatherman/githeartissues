@@ -176,7 +176,6 @@ _.extend(Heart.prototype, {
             }.bind(this));
     },
     updateHeight: _.debounce(function(el) {
-        console.log('===============', el.offsetHeight);
         this.height(el.offsetHeight);
     }, 200, Heart.prototype),
 });
