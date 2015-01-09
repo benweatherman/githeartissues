@@ -54,12 +54,14 @@
                             <li class="list__item--tag" data-bind="style: {'background-color': color}"></li>
                         </ul>
                         <!-- /ko -->
+
                         <button type="button" class="btn--icon btn--remove">
                             <span class="fa fa-times"  title="Remove issue from milestone"></span>
                         </button>
+
                         <div class="popover-wrap" data-bind="css: {expanded: assignUserVisible}">
                             <!-- ko if: assignee -->
-                            <button type="button" class="btn--avatar">
+                            <button type="button" class="btn--avatar" data-bind="click: removeUser">
                                 <img class="img--avatar" data-bind="attr: {src: assignee().avatarURL}">
                                 <span class="fa fa-times"  title="Unassign this user"></span>
                             </button>
