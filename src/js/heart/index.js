@@ -177,7 +177,7 @@ _.extend(Heart.prototype, {
     },
     updateHeight: _.debounce(function(el) {
         this.height(el.offsetHeight);
-    }, 200, Heart.prototype),
+    }, 200, Heart.prototype)
 });
 
 module.exports = Heart;

@@ -54,6 +54,7 @@
     "lodash": "2.4.1",
     "merge-stream": "0.1.5",
     "mocha": "1.21.4",
+    "moment": "2.9.0",
     "node-bourbon": "1.2.3",
     "node-neat": "1.4.2",
     "sinon": "1.10.3",

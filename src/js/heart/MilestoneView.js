@@ -58,6 +58,11 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
         log.info('Saving issue ordering for milestone', this.number(), this.title(), ':', issueNumbers);
 
         return this.priorities.save(issueNumbers);
+    },
+    removeMilestone: function(issueView) {
+        this.issueViews.remove(issueView);
+        return issueView.milestoneNumber('').save()
+            .then(this.savePriorities.bind(this));
     }
 });
 
