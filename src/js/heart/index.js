@@ -16,7 +16,15 @@ var User = require('./User');
 var CredentialsDialog = require('./credentials/CredentialsDialog');
 
 function Heart() {
-    this.template = fs.readFileSync(__dirname + '/index.html', 'utf8');
+    this.height = ko.observable();
+    this.heightStyle = ko.computed(function() {
+        return this.height() + 'px';
+    }.bind(this));
+
+    var body = document.body;
+    window.addEventListener('resize', this.updateHeight.bind(this, body));
+    this.updateHeight(body);
+
     this.token = ko.observable();
     this.repo = ko.observable();
     this.branch = ko.observable();
@@ -38,6 +46,7 @@ function Heart() {
 }
 
 _.extend(Heart.prototype, {
+    template: fs.readFileSync(__dirname + '/index.html', 'utf8'),
     github: github,
     start: function(el) {
         this.loadConfig();
@@ -165,7 +174,10 @@ _.extend(Heart.prototype, {
                     this.loadData();
                 }
             }.bind(this));
-    }
+    },
+    updateHeight: _.debounce(function(el) {
+        this.height(el.offsetHeight);
+    }, 200, Heart.prototype)
 });
 
 module.exports = Heart;

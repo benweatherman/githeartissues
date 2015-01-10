@@ -24,7 +24,7 @@ _.extend(Milestone.prototype, {
         this.number(data.number);
         this.title(data.title);
         this.description(data.description);
-        this.url(data.url.replace(/api\.|repos\//g, ''));
+        this.url('https://github.com/' + this.repo + '/milestones/' + data.title);
 
         this.fetchIssues();
     },

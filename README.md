@@ -9,15 +9,21 @@ We've always loved using github issues. Now we ♥ using it.
 
 #### Demo
 
-Check out http://benweatherman.github.io/githeartissues/ (make sure you follow the configuring section)
+Check out http://benweatherman.github.io/githeartissues/
 
 
 #### Building
 
-Build everything
 ```bash
 ./bootstrap.sh
 gulp build watch
+open dist/html/app.html
 ```
 
-open up `dist/html/app.html`
+
+#### Deploying
+
+```bash
+gulp bump
+gulp deploy
+```

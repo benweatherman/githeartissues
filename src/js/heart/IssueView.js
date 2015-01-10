@@ -18,6 +18,14 @@ _.extend(IssueView.prototype, Issue.prototype, {
         this.save()
             .tap(this.assignUserVisible.bind(undefined, false))
             .catch(log.error.bind(log));
+    },
+    removeUser: function(user) {
+        log.log('unASSigning', user, '=>', this);
+        this.assignee(null);
+
+        this.save()
+            .tap(this.assignUserVisible.bind(undefined, false))
+            .catch(log.error.bind(log));
     }
 });
 

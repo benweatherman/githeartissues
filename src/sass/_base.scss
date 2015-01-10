@@ -45,6 +45,7 @@ html, body {
     right: 0;
     bottom: 0;
     left: 0;
+    margin-bottom: .8em;
     overflow-x: auto;
     overflow-y: hidden;
 
@@ -137,6 +138,7 @@ html, body {
     overflow-x: hidden;
     overflow-y: auto;
     font-size: .9em;
+    min-height: 30em;
     &::-webkit-scrollbar {
         height: .5em;
         width: .5em;
@@ -192,6 +194,19 @@ html, body {
             }
         }
     }
+}
+
+.list--tags {
+    padding: 0 1em;
+    margin-bottom: 0;
+    position: relative;
+    top: -0.75em;
+}
+
+.list__item--tag {
+    display: inline-block;
+    height: .5em;
+    width: 1.25em;
 }
 
 .subheader {
@@ -358,6 +373,7 @@ html, body {
 .popover-wrap {
     position: relative;
     display: block;
+    margin-top: .25em;
 }
 
 .popover {
@@ -390,7 +406,7 @@ html, body {
 .expanded {
     .btn--popover {
         background: #888;
-        padding-bottom: .55em;
+        padding-bottom: .8em;
         color: #fff;
         border-top: 1px solid #888;
         font-weight: 700;
@@ -501,10 +517,11 @@ html, body {
     width: 1.5em;
     height: 1.5em;
     position: absolute;
-    top: .5em;
+    top: .45em;
     right: .5em;
     text-align: center;
     font-size: 1em;
+    z-index: 3;
 
     .fa {
         @include transition(all .2s ease-out 0);
@@ -562,10 +579,23 @@ html, body {
     }
 }
 
-.btn--close {
+.btn--remove {
     position: absolute;
-    top: .35em;
+    top: .25em;
     right: .5em;
+    font-size: 1em;
+    opacity: 0;
+    @include transition(all .2s ease-out 0);
+}
+
+.list__item:hover {
+    .btn--remove {
+        opacity: .3;
+
+        &:hover {
+            opacity: .5;
+        }
+    }
 }
 
 .btn--popover {
@@ -576,7 +606,7 @@ html, body {
     border: 0;
     border-top: 1px dotted #ddd;
     font-family: 'Arimo', sans-serif;
-    padding: .35em 1em .35em 1.25em;
+    padding: .75em 1em .75em 1.25em;
 
     &:hover, &:focus {
         color: #999;
