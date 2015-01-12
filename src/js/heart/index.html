@@ -36,9 +36,8 @@
     </div>
 
     <div class="subcontent-wrap--outer" data-bind="style: {height: heightStyle}">
-        <div class="subcontent-wrap">
-            <!-- ko foreach: milestones -->
-            <div class="subcontent">
+        <div class="subcontent-wrap" data-bind="sortable: {data: milestones, connectClass: 'connected-milestone', afterMove: $data.milestoneMoved.bind($data)}">
+            <div class="subcontent connected-milestone">
                 <h4 class="subheader">
                     <a class="subheader__link" data-bind="text: title, attr: {href: url}" target="_blank"></a>
                 </h4>
@@ -89,7 +88,6 @@
                     </li>
                 </ul>
             </div>
-            <!-- /ko -->
         </div>
     </div>
 </section>
