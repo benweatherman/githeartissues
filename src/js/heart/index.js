@@ -17,9 +17,7 @@ var CredentialsDialog = require('./credentials/CredentialsDialog');
 
 function Heart() {
     this.height = ko.observable();
-    this.heightStyle = ko.computed(function() {
-        return this.height() + 'px';
-    }.bind(this));
+    this.heightStyle = ko.computed(function() { return this.height() + 'px'; }.bind(this));
 
     var body = document.body;
     window.addEventListener('resize', this.updateHeight.bind(this, body));
@@ -64,10 +62,12 @@ _.extend(Heart.prototype, {
 
         this.milestones.removeAll();
 
+        var milestoneSortOrder = JSON.parse(localStorage.getItem(this.getMilestoneSortKey()));
         github.get('repos/' + this.repo() + '/milestones')
             .then(function(response) {
                 return response.map(function(m) { return new MilestoneView(m, this.repo(), this.branch()); }, this);
             }.bind(this))
+            .then(this.sortMilestones.bind(this, milestoneSortOrder))
             .tap(this.milestones.bind(this))
             .catch(function(e) {
                 var msg = 'Could not load milestones for repo ' + this.repo() + ' ' + e.message;
@@ -85,6 +85,37 @@ _.extend(Heart.prototype, {
                 log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
+    },
+    getMilestoneSortKey: function() {
+        return this.repo() + '-milestone-sort';
+    },
+    sortMilestones: function(sortOrder, milestones) {
+        sortOrder = sortOrder || [];
+
+        var remaining = milestones.map(function(view) { return view.number(); });
+        var sorted = [];
+
+        var milestonesByNumber = {};
+        milestones.forEach(function(view) {
+            milestonesByNumber[view.number()] = view;
+        });
+
+        sortOrder.forEach(function(number) {
+            var milestone = milestonesByNumber[number];
+            if (milestone) {
+                sorted.push(milestone);
+                delete remaining[remaining.indexOf(milestone.number())];
+            }
+        }.bind(this));
+
+        remaining.forEach(function(number) {
+            var milestone = milestonesByNumber[number];
+            if (milestone) {
+                sorted.push(milestone);
+            }
+        });
+
+        return sorted;
     },
     loadConfig: function() {
         this.token(this.credentialsDialog.token());
@@ -152,6 +183,13 @@ _.extend(Heart.prototype, {
         issue.milestoneNumber('').save();
 
         this.saveAllMilestonePriorities();
+    },
+    milestoneMoved: function(options, evt, ui) {
+        var milestoneView = options.item;
+
+        var milestoneOrder = this.milestones().map(function(milestone) { return milestone.number(); });
+        localStorage.setItem(this.getMilestoneSortKey(), JSON.stringify(milestoneOrder));
+        log.log('Saved milestone order', this.milestones().map(function(milestone) { return milestone.title(); }));
     },
     showAssignUser: function(milestoneView, issue) {
         if (issue.assignUserVisible()) {
