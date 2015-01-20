@@ -7,12 +7,21 @@ function build(minify) {
     var sourcemaps = require('gulp-sourcemaps');
     var uglify = require('gulp-uglify');
     var gulpif = require('gulp-if');
+    var gutil = require('gulp-util');
 
     return browserify({
             entries: ['./src/js/app/index.js'],
             extensions: ['.js']
         })
         .bundle()
+        .on('error', function(err) {
+            if (minify) {
+                throw new Error(err);
+            }
+            else {
+                gutil.log(gutil.colors.red('✘'), err.message.trim());
+            }
+        })
         .pipe(source('app.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true}))
