@@ -1,15 +1,35 @@
 <section class="content clearfix" data-bind="css: {'drawer-in': allIssuesVisible}">
-
-    <button type="button" class="btn--icon btn--settings" data-bind="click: openCredentialsDialog">
-        <span class="fa fa-gear fa-lg"></span>
-    </button>
-
+    <ul class="list--utility">
+        <li class="list__item--utility">
+            <button type="button" class="btn--icon btn--utility" data-bind="click: openCredentialsDialog" title="Settings">
+                <span class="fa fa-gear fa-lg"></span>
+            </button>
+        </li>
+        <li class="list__item--utility">
+            <!-- Add class "can-save" when user has made a change to the UI -->
+            <button type="button" class="btn--icon btn--utility btn--disabled" title="Save changes">
+                <span class="fa fa-save fa-lg"></span>
+            </button>
+        </li>
+        <li class="list__item--utility">
+            <!-- Add class "can-save" when user has made a change to the UI -->
+            <button type="button" class="btn--icon btn--utility btn--disabled" title="Revert changes">
+                <span class="fa fa-undo fa-lg"></span>
+            </button>
+        </li>
+        <!-- Add class "in" to this element when save or revert occurs. Remove class after 3000ms. -->
+        <li class="list__item--utility list__item--utility-message">
+            <!-- Should say saved or reverted based on whatever action was taken -->
+            <span>Changes <span>saved/reverted</span></span>
+        </li>
+    </ul>
     <div class="subcontent--drawer">
         <button type="button" class="btn--icon btn--toggle">
             <span class="fa fa-chevron-right hide--drawer-in" title="See all open issues" data-bind="click: allIssuesVisible.bind($data, true)"></span>
             <span class="fa fa-times hide--drawer-out"  title="Hide all open issues" data-bind="click: allIssuesVisible.bind($data, false)"></span>
         </button>
         <h4 class="subheader">
+            <!-- Add class "can-save" when user has made a change to the UI -->
             <a class="subheader__link" href="https://github.com/ordoro/ordoro/issues" target="_blank">Open Issues</a>
         </h4>
         <input type="text" class="text-input search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
@@ -39,6 +59,7 @@
         <div class="subcontent-wrap" data-bind="sortable: {data: milestones, connectClass: 'connected-milestone', afterMove: $data.milestoneMoved.bind($data)}">
             <div class="subcontent connected-milestone">
                 <h4 class="subheader">
+                    <!-- Add class "can-save" when user has made a change to the UI -->
                     <a class="subheader__link" data-bind="text: title, attr: {href: url}" target="_blank"></a>
                 </h4>
                 <ul class="list connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
