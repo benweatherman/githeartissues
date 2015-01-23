@@ -1,24 +1,19 @@
 <section class="content clearfix" data-bind="css: {'drawer-in': allIssuesVisible}">
-    <ul class="list--utility">
+    <button type="button" class="btn--icon btn--settings" data-bind="click: openCredentialsDialog" title="Settings">
+        <span class="fa fa-gear fa-lg"></span>
+    </button>
+    <ul class="list--utility" data-bind="css: {'in': needsSave}">
         <li class="list__item--utility">
-            <button type="button" class="btn--icon btn--utility" data-bind="click: openCredentialsDialog" title="Settings">
-                <span class="fa fa-gear fa-lg"></span>
-            </button>
-        </li>
-        <li class="list__item--utility">
-            <button type="button" class="btn--icon btn--utility btn--disabled" title="Save changes" data-bind="click: save, css: {'can-save': needsSave}">
+            <button type="button" class="btn--icon can-save" title="Save changes" data-bind="click: save">
                 <span class="fa fa-save fa-lg"></span>
+                <span class="btn__text">Save</span>
             </button>
         </li>
         <li class="list__item--utility">
-            <button type="button" class="btn--icon btn--utility btn--disabled" title="Revert changes" data-bind="click: revert, css: {'can-save': needsSave}">
+            <button type="button" class="btn--icon can-save" title="Revert changes" data-bind="click: revert">
                 <span class="fa fa-undo fa-lg"></span>
+                <span class="btn__text">Revert</span>
             </button>
-        </li>
-        <!-- Add class "in" to this element when save or revert occurs. Remove class after 3000ms. -->
-        <li class="list__item--utility list__item--utility-message">
-            <!-- Should say saved or reverted based on whatever action was taken -->
-            <span>Changes <span>saved/reverted</span></span>
         </li>
     </ul>
     <div class="subcontent--drawer">
