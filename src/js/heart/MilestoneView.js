@@ -1,30 +1,61 @@
 var ko = require('knockout');
 var _ = require('lodash');
+var when = require('when');
 
 var log = require('./log');
+var github = require('./github');
 var Milestone = require('./Milestone');
 var IssueView = require('./IssueView');
 var IssuePriority = require('./IssuePriority');
 
-var DEFAULT_SAVE_DELAY = 15000;
-
-function MilestoneView(data, repo, dataBranch) {
+function MilestoneView(data, repo, dataBranch, users) {
     Milestone.call(this, data, repo);
 
     this.issueViews = ko.observableArray();
-    // Subscribe to a change rather than making it a computed because the drag/drop stuff doesn't like computeds
-    this.issues.subscribe(this.createViews, this);
+    this.originalIssueViews = ko.observableArray();
 
-    this.priorities = new IssuePriority(repo, this.number(), this.title(), dataBranch);
+    this.priorityStorage = new IssuePriority(repo, this.number(), this.title(), dataBranch);
+    this.priorities = ko.observableArray();
+    this.users = users;
+    this.dirty = ko.computed(function() {
+        var original = this.originalIssueViews().map(function(view) { return view.number(); });
+        var current = this.issueViews().map(function(view) { return view.number(); });
+
+        return !_.isEqual(original, current);
+    }.bind(this));
+
+    this.loadIssues();
 }
 
 _.extend(MilestoneView.prototype, Milestone.prototype, {
-    createViews: function(issues) {
-        var views = issues.map(function(issue) { return IssueView.clone(issue); });
+    loadIssues: function() {
+        return this.priorityStorage.get()
+            .tap(this.priorities.bind(this))
+            .then(this.fetchIssues.bind(this))
+            .then(function(issueViews) {
+                return [issueViews, this.priorities()];
+            }.bind(this))
+            .spread(this.sortViews.bind(this))
+            .tap(this.issueViews.bind(this))
+            .done(function(views) {
+                this.originalIssueViews(views.slice());
+            }.bind(this));
+    },
+    fetchIssues: function() {
+        log.log('Fetching issues for milestone', this.number(), ':', this.title());
 
-        this.priorities.get()
-            .then(this.sortViews.bind(this, views))
-            .done(this.issueViews.bind(this));
+        var url = this.url().replace(/milestones\/\d*/g, 'issues');
+        var params = {page_page: 100, milestone: this.number()};
+
+        return github.get(url, params)
+            .then(function(response) {
+                return response.map(function(d) { return new IssueView(d); });
+            })
+            .catch(function(e) {
+                var msg = 'Could not load issues for milestones ' + this.title();
+                log.error(msg, e);
+                throw new Error(msg);
+            }.bind(this));
     },
     sortViews: function(issueViews, issueNumbers) {
         var remainingIssueNumbers = issueViews.map(function(view) { return view.number(); });
@@ -61,8 +92,33 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
     },
     removeMilestone: function(issueView) {
         this.issueViews.remove(issueView);
-        return issueView.milestoneNumber('').save()
-            .then(this.savePriorities.bind(this));
+        issueView.milestoneNumber('');
+    },
+    showAssignUser: function(issueView) {
+        if (issueView.assignUserVisible()) {
+            issueView.assignUserVisible(false);
+            return;
+        }
+
+        this.issueViews().forEach(function(view) {
+            view.assignUserVisible(view === issueView);
+        });
+    },
+    save: function() {
+        // FIXME: Need to implement the following
+        // Look for issues that need to be saved where issue.milestoneNumber() !== this.number()
+        // Save deleted issues so their milestone number is set to ''
+        // Save priorities
+        // Set new priorities
+        this.originalIssueViews(this.issueViews().slice());
+
+        var deferred = when.defer();
+        setTimeout(function() { log.log('====='); deferred.resolve(true); }, 5000);
+        return deferred.promise;
+    },
+    revert: function() {
+        var sorted = this.sortViews(this.originalIssueViews(), this.priorities());
+        this.issueViews(sorted);
     }
 });
 

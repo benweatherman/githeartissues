@@ -16,7 +16,7 @@ _.extend(IssueView.prototype, Issue.prototype, {
         this.assignee(user);
 
         this.save()
-            .tap(this.assignUserVisible.bind(undefined, false))
+            .tap(this.assignUserVisible.bind(this, false))
             .catch(log.error.bind(log));
     },
     removeUser: function(user) {
@@ -24,7 +24,7 @@ _.extend(IssueView.prototype, Issue.prototype, {
         this.assignee(null);
 
         this.save()
-            .tap(this.assignUserVisible.bind(undefined, false))
+            .tap(this.assignUserVisible.bind(this, false))
             .catch(log.error.bind(log));
     }
 });

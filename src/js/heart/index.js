@@ -26,12 +26,12 @@ function Heart() {
     this.token = ko.observable();
     this.repo = ko.observable();
     this.branch = ko.observable();
+
     this.milestones = ko.observableArray();
     this.allIssues = ko.observableArray();
     this.allIssuesSearch = ko.observable('type:issues no:milestone state:open');
     this.allIssuesVisible = ko.observable(JSON.parse(localStorage.getItem('allIssuesVisible')));
     this.allIssuesVisible.subscribe(localStorage.setItem.bind(localStorage, 'allIssuesVisible'));
-    this.users = ko.observableArray();
     this.credentialsDialog = new CredentialsDialog();
 
     this.isConfigured = ko.computed(function() { return this.token() && this.token().length && this.repo() && this.repo().length; }, this);
@@ -41,6 +41,14 @@ function Heart() {
     this.repo.subscribe(this.updateRepoInSearch, this);
 
     this.allIssuesSearch.subscribe(this.fetchAllIssues, this);
+
+    this.saving = ko.observable(false);
+    this.needsSave = ko.computed(function() {
+        var saving = this.saving();
+        var hasDirtyMilestone = this.milestones().reduce(function(memo, milestone) { return milestone.dirty() || memo; }, false);
+
+        return !saving && hasDirtyMilestone;
+    }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 400 } });
 }
 
 _.extend(Heart.prototype, {
@@ -63,27 +71,24 @@ _.extend(Heart.prototype, {
         this.milestones.removeAll();
 
         var milestoneSortOrder = JSON.parse(localStorage.getItem(this.getMilestoneSortKey()));
-        github.get('repos/' + this.repo() + '/milestones')
+
+        var assigneesRequest = github.get('repos/' + this.repo() + '/assignees')
             .then(function(response) {
-                return response.map(function(m) { return new MilestoneView(m, this.repo(), this.branch()); }, this);
+                return response.map(function(u) { return new User(u); });
+            });
+
+        var milestonesRequest = github.get('repos/' + this.repo() + '/milestones');
+
+        when.all([assigneesRequest, milestonesRequest])
+            .spread(function(assignees, milestonesResponse) {
+                return milestonesResponse.map(function(m) { return new MilestoneView(m, this.repo(), this.branch(), assignees); }, this);
             }.bind(this))
             .then(this.sortMilestones.bind(this, milestoneSortOrder))
             .tap(this.milestones.bind(this))
             .catch(function(e) {
-                var msg = 'Could not load milestones for repo ' + this.repo() + ' ' + e.message;
+                var msg = 'Could not load ' + this.repo() + ' ' + e.message;
                 log.error(msg, e);
-                throw Error(msg);
-            }.bind(this));
-
-        github.get('repos/' + this.repo() + '/assignees')
-            .then(function(response) {
-                return response.map(function(u) { return new User(u); });
-            })
-            .tap(this.users.bind(this))
-            .catch(function(e) {
-                var msg = 'Could not load users for repo ' + this.repo() + ' ' + e.message;
-                log.error(msg, e);
-                throw Error(msg);
+                throw new Error(msg);
             }.bind(this));
     },
     getMilestoneSortKey: function() {
@@ -138,7 +143,7 @@ _.extend(Heart.prototype, {
                 log.error(msg, e);
                 throw Error(msg);
             }.bind(this));
-    }, 500, Heart.prototype),
+    }, 300, Heart.prototype),
     saveAllMilestonePriorities: _.debounce(function() {
         if (!this.branch() || !this.branch().length) { return when.resolve([]); }
 
@@ -151,58 +156,10 @@ _.extend(Heart.prototype, {
         search += ' repo:' + repo;
         this.allIssuesSearch(search);
     },
-    issueMovedToMilestone: function(options, evt, ui) {
-        var issue = options.item;
-        var source = options.sourceParent();
-        var target = options.targetParent();
-
-        log.log('Issue moved', issue);
-
-        if (source !== target) {
-            log.log(source, '=>', target);
-            var targetMilestone = _.find(this.milestones(), function(m) { return target === m.issueViews(); });
-            if (!targetMilestone) {
-                log.error('WTF happened. There\'s no milestone that matches the target', target);
-                return;
-            }
-
-            log.log('Changing issue', issue.number(), 'to milestone', targetMilestone.title(), targetMilestone.number());
-
-            issue.milestoneNumber(targetMilestone.number()).save();
-        }
-
-        this.saveAllMilestonePriorities();
-    },
-    issueRemovedFromMilestone: function(options, evt, ui) {
-        var issue = options.item;
-        var source = options.sourceParent();
-        var target = options.targetParent();
-
-        log.log('Removing issue from milestone', issue);
-
-        issue.milestoneNumber('').save();
-
-        this.saveAllMilestonePriorities();
-    },
     milestoneMoved: function(options, evt, ui) {
-        var milestoneView = options.item;
-
         var milestoneOrder = this.milestones().map(function(milestone) { return milestone.number(); });
         localStorage.setItem(this.getMilestoneSortKey(), JSON.stringify(milestoneOrder));
         log.log('Saved milestone order', this.milestones().map(function(milestone) { return milestone.title(); }));
-    },
-    showAssignUser: function(milestoneView, issue) {
-        if (issue.assignUserVisible()) {
-            issue.assignUserVisible(false);
-            return;
-        }
-
-        log.log('Changing assignee for', milestoneView, issue);
-        this.milestones().forEach(function(milestone) {
-            milestone.issueViews().forEach(function(view) { view.assignUserVisible(false); });
-        });
-
-        issue.assignUserVisible(true);
     },
     openCredentialsDialog: function() {
         this.credentialsDialog.open()
@@ -215,7 +172,19 @@ _.extend(Heart.prototype, {
     },
     updateHeight: _.debounce(function(el) {
         this.height(el.offsetHeight);
-    }, 200, Heart.prototype)
+    }, 200, Heart.prototype),
+    save: function() {
+        this.saving(true);
+
+        var tasks = this.milestones().map(function(milestone) { return milestone.save(); });
+
+        when.all(tasks)
+            .done(this.saving.bind(this, false));
+    },
+    revert: function() {
+        this.fetchAllIssues();
+        this.milestones().forEach(function(milestone) { milestone.revert(); });
+    }
 });
 
 module.exports = Heart;

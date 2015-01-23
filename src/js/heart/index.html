@@ -6,14 +6,12 @@
             </button>
         </li>
         <li class="list__item--utility">
-            <!-- Add class "can-save" when user has made a change to the UI -->
-            <button type="button" class="btn--icon btn--utility btn--disabled" title="Save changes">
+            <button type="button" class="btn--icon btn--utility btn--disabled" title="Save changes" data-bind="click: save, css: {'can-save': needsSave}">
                 <span class="fa fa-save fa-lg"></span>
             </button>
         </li>
         <li class="list__item--utility">
-            <!-- Add class "can-save" when user has made a change to the UI -->
-            <button type="button" class="btn--icon btn--utility btn--disabled" title="Revert changes">
+            <button type="button" class="btn--icon btn--utility btn--disabled" title="Revert changes" data-bind="click: revert, css: {'can-save': needsSave}">
                 <span class="fa fa-undo fa-lg"></span>
             </button>
         </li>
@@ -33,7 +31,7 @@
             <a class="subheader__link" href="https://github.com/ordoro/ordoro/issues" target="_blank">Open Issues</a>
         </h4>
         <input type="text" class="text-input search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
-        <ul class="list list--drawer connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}">
+        <ul class="list list--drawer connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable'}">
             <li class="list__item">
                 <a data-bind="attr: {href: htmlURL}" target="_blank">
                     <strong class="make-block" data-bind="text: number"></strong>
@@ -59,10 +57,9 @@
         <div class="subcontent-wrap" data-bind="sortable: {data: milestones, connectClass: 'connected-milestone', afterMove: $data.milestoneMoved.bind($data)}">
             <div class="subcontent connected-milestone">
                 <h4 class="subheader">
-                    <!-- Add class "can-save" when user has made a change to the UI -->
-                    <a class="subheader__link" data-bind="text: title, attr: {href: url}" target="_blank"></a>
+                    <a class="subheader__link" data-bind="text: title, attr: {href: clickableURL}, css: {'can-save': dirty}" target="_blank"></a>
                 </h4>
-                <ul class="list connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
+                <ul class="list connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable'}">
                     <li class="list__item">
                         <a data-bind="attr: {href: htmlURL}" target="_blank">
                             <strong class="make-block" data-bind="text: number"></strong>
@@ -86,12 +83,12 @@
                                 <span class="fa fa-times"  title="Unassign this user"></span>
                             </button>
                             <!-- /ko -->
-                            <button type="button" class="btn--popover" data-bind="click: $root.showAssignUser.bind($root, $parent)">Assign issue to...</button>
+                            <button type="button" class="btn--popover" data-bind="click: $parent.showAssignUser.bind($parent)">Assign issue to...</button>
                             <!-- ko if: assignUserVisible -->
                             <div class="popover">
                                 <div class="popover-inner">
                                     <ul class="popover-list">
-                                        <!-- ko foreach: $root.users -->
+                                        <!-- ko foreach: $parent.users -->
                                         <li class="popover-list__item">
                                             <button class="btn--assign" data-bind="click: $parent.assignUser.bind($parent)">
                                                 <span class="avatar make-inline-block">

@@ -9,10 +9,7 @@ function build(minify) {
     var gulpif = require('gulp-if');
     var gutil = require('gulp-util');
 
-    return browserify({
-            entries: ['./src/js/app/index.js'],
-            extensions: ['.js']
-        })
+    return browserify('./src/js/app/index.js')
         .bundle()
         .on('error', function(err) {
             if (minify) {
