@@ -32,6 +32,7 @@ function Heart() {
     this.allIssuesSearch = ko.observable('type:issues no:milestone state:open');
     this.allIssuesVisible = ko.observable(JSON.parse(localStorage.getItem('allIssuesVisible')));
     this.allIssuesVisible.subscribe(localStorage.setItem.bind(localStorage, 'allIssuesVisible'));
+    this.allIssuesURL = ko.computed(function() { return 'https://github.com/' + this.repo() + '/issues'; }.bind(this));
     this.credentialsDialog = new CredentialsDialog();
 
     this.isConfigured = ko.computed(function() { return this.token() && this.token().length && this.repo() && this.repo().length; }, this);
@@ -66,7 +67,7 @@ _.extend(Heart.prototype, {
         ko.applyBindings(this, el);
     },
     loadData: function() {
-        log.log('Fetching milestones for ', this.repo());
+        log.log('Fetching milestones for', this.repo());
 
         this.milestones.removeAll();
 
@@ -144,12 +145,6 @@ _.extend(Heart.prototype, {
                 throw Error(msg);
             }.bind(this));
     }, 300, Heart.prototype),
-    saveAllMilestonePriorities: _.debounce(function() {
-        if (!this.branch() || !this.branch().length) { return when.resolve([]); }
-
-        var tasks = this.milestones().map(function(milestone) { return milestone.savePriorities.bind(milestone); });
-        return sequence(tasks);
-    }, 10000, Heart.prototype),
     updateRepoInSearch: function(repo) {
         var search = this.allIssuesSearch().replace(/repo:[^\s]*/gi, '').replace(/\s{2,}/g, ' ').trim();
 
@@ -176,10 +171,10 @@ _.extend(Heart.prototype, {
     save: function() {
         this.saving(true);
 
-        var tasks = this.milestones().map(function(milestone) { return milestone.save(); });
+        var tasks = this.milestones().map(function(milestone) { return milestone.save.bind(milestone); });
 
-        when.all(tasks)
-            .done(this.saving.bind(this, false));
+        sequence(tasks)
+            .finally(this.saving.bind(this, false));
     },
     revert: function() {
         this.fetchAllIssues();

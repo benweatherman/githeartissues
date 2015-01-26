@@ -1,6 +1,7 @@
 var ko = require('knockout');
 var _ = require('lodash');
 var when = require('when');
+var sequence = require('when/sequence');
 
 var log = require('./log');
 var github = require('./github');
@@ -86,13 +87,14 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
     savePriorities: function() {
         var issueNumbers = this.issueViews().map(function(issue) { return issue.number(); });
 
-        log.info('Saving issue ordering for milestone', this.number(), this.title(), ':', issueNumbers);
+        log.log('Priorities:', issueNumbers);
 
-        return this.priorities.save(issueNumbers);
+        return this.priorityStorage.save(issueNumbers)
+            .tap(this.priorities.bind(this, issueNumbers));
     },
     removeMilestone: function(issueView) {
         this.issueViews.remove(issueView);
-        issueView.milestoneNumber('');
+        issueView.milestoneNumber(null);
     },
     showAssignUser: function(issueView) {
         if (issueView.assignUserVisible()) {
@@ -105,16 +107,29 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
         });
     },
     save: function() {
-        // FIXME: Need to implement the following
-        // Look for issues that need to be saved where issue.milestoneNumber() !== this.number()
-        // Save deleted issues so their milestone number is set to ''
-        // Save priorities
-        // Set new priorities
-        this.originalIssueViews(this.issueViews().slice());
+        var newIssues = this.issueViews().filter(function(view) { return view.milestoneNumber() !== this.number(); }.bind(this));
+        var deletedIssues = this.originalIssueViews().filter(function(view) { return !view.milestoneNumber(); });
 
-        var deferred = when.defer();
-        setTimeout(function() { log.log('====='); deferred.resolve(true); }, 5000);
-        return deferred.promise;
+        log.log('Save info for', this.title(), '=========================');
+        newIssues.forEach(function(view) { view.milestoneNumber(this.number()); }.bind(this));
+
+        return when.try(function() {
+                log.log('New issues:', newIssues);
+                return sequence(newIssues.map(function(view) { return view.save.bind(view); }));
+            })
+            .tap(function() {
+                log.log('Deleted issues:', deletedIssues);
+                return sequence(deletedIssues.map(function(view) { return view.save.bind(view); }));
+            })
+            .tap(function() {
+                return this.savePriorities();
+            }.bind(this))
+            .then(function() {
+                this.originalIssueViews(this.issueViews().slice());
+
+                log.log('============================');
+                return [newIssues, deletedIssues];
+            }.bind(this));
     },
     revert: function() {
         var sorted = this.sortViews(this.originalIssueViews(), this.priorities());

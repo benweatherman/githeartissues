@@ -63,6 +63,8 @@ _.extend(IssuePriority.prototype, {
             .then(function(fileInfo) {
                 this.__file = when.resolve(fileInfo);
                 this.cached = when.resolve(issueNumbers);
+
+                return issueNumbers;
             }.bind(this));
     },
     getFile: function() {
