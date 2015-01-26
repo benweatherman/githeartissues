@@ -116,7 +116,7 @@ html, body {
     .btn--toggle {
         right: .5em;
         font-size: 1em;
-        top: 1.5em;
+        top: 2.1em;
         background: transparent;
         .fa {
 
@@ -211,6 +211,7 @@ html, body {
 
 .subheader {
     margin-bottom: .5em;
+    margin-top: 2em;
     padding-top: .5em;
     border-top: 2px solid #ddd;
     text-shadow: rgba(255,255,255, .6) 0 1px 0;
@@ -548,20 +549,53 @@ html, body {
     }
 }
 
+.list--utility {
+    position: absolute;
+    left: 45%;
+    top: -2.5em;
+    z-index: 3;
+    margin-top: 0;
+    padding: 0 .65em .1em 0.65em;
+    text-align: center;
+    border-radius: 0 0 .25em .25em;
+    box-shadow: rgba(0,0,0,.1) 0 .1em .1em;
+    background: #fff;
+    @include transition(all .2s ease-out 0);
+
+    &.in {
+        top: 0;
+    }
+}
+
+.list__item--utility {
+    display: inline-block;
+    list-style: none;
+    line-height: 1.5;
+    margin-left: .45em;
+    &:first-of-type {
+        margin-left: 0;
+    }
+
+}
+
+.btn__text {
+    font-size: .85em;
+}
+
 .btn--settings {
     position: absolute;
-    left: .0;
-    top: 0;
-    line-height: 1.5;
-    padding: .1em .25em;
+    left: .35em;
+    top: .35em;
     z-index: 3;
+    margin: 0;
+    padding: 0;
 }
 
 .btn--toggle {
     text-align: center;
     opacity: 1;
     position: absolute;
-    top: 1.85em;
+    top: 2.85em;
     right: -1.75em;
     padding: 0;
     border-radius: 0 .25em .25em 0;
@@ -642,6 +676,25 @@ html, body {
 }
 
 .btn--assign-text {vertical-align: middle;}
+
+.btn--disabled, .btn--disabled:hover {
+    opacity: 0.15;
+    cursor: default;
+}
+
+.can-save {
+    color: $primary-color;
+    opacity: 1;
+    @include transition(all .3s ease-out 0);
+    &:hover {
+        cursor: pointer;
+        color: #444;
+        opacity: 1;
+    }
+    &:focus {
+        opacity: 1;
+    }
+}
 
 
 /*------------------------------------*\

@@ -1,19 +1,32 @@
 <section class="content clearfix" data-bind="css: {'drawer-in': allIssuesVisible}">
-
-    <button type="button" class="btn--icon btn--settings" data-bind="click: openCredentialsDialog">
+    <button type="button" class="btn--icon btn--settings" data-bind="click: openCredentialsDialog" title="Settings">
         <span class="fa fa-gear fa-lg"></span>
     </button>
-
+    <ul class="list--utility" data-bind="css: {'in': needsSave}">
+        <li class="list__item--utility">
+            <button type="button" class="btn--icon can-save" title="Save changes" data-bind="click: save">
+                <span class="fa fa-save fa-lg"></span>
+                <span class="btn__text">Save</span>
+            </button>
+        </li>
+        <li class="list__item--utility">
+            <button type="button" class="btn--icon can-save" title="Revert changes" data-bind="click: revert">
+                <span class="fa fa-undo fa-lg"></span>
+                <span class="btn__text">Revert</span>
+            </button>
+        </li>
+    </ul>
     <div class="subcontent--drawer">
         <button type="button" class="btn--icon btn--toggle">
             <span class="fa fa-chevron-right hide--drawer-in" title="See all open issues" data-bind="click: allIssuesVisible.bind($data, true)"></span>
             <span class="fa fa-times hide--drawer-out"  title="Hide all open issues" data-bind="click: allIssuesVisible.bind($data, false)"></span>
         </button>
         <h4 class="subheader">
+            <!-- Add class "can-save" when user has made a change to the UI -->
             <a class="subheader__link" href="https://github.com/ordoro/ordoro/issues" target="_blank">Open Issues</a>
         </h4>
         <input type="text" class="text-input search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
-        <ul class="list list--drawer connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable', afterMove: issueRemovedFromMilestone}">
+        <ul class="list list--drawer connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable'}">
             <li class="list__item">
                 <a data-bind="attr: {href: htmlURL}" target="_blank">
                     <strong class="make-block" data-bind="text: number"></strong>
@@ -39,9 +52,9 @@
         <div class="subcontent-wrap" data-bind="sortable: {data: milestones, connectClass: 'connected-milestone', afterMove: $data.milestoneMoved.bind($data)}">
             <div class="subcontent connected-milestone">
                 <h4 class="subheader">
-                    <a class="subheader__link" data-bind="text: title, attr: {href: url}" target="_blank"></a>
+                    <a class="subheader__link" data-bind="text: title, attr: {href: clickableURL}, css: {'can-save': dirty}" target="_blank"></a>
                 </h4>
-                <ul class="list connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable', afterMove: $parent.issueMovedToMilestone.bind($parent)}">
+                <ul class="list connected-sortable" data-bind="sortable: {data: issueViews, connectClass: 'connected-sortable'}">
                     <li class="list__item">
                         <a data-bind="attr: {href: htmlURL}" target="_blank">
                             <strong class="make-block" data-bind="text: number"></strong>
@@ -65,12 +78,12 @@
                                 <span class="fa fa-times"  title="Unassign this user"></span>
                             </button>
                             <!-- /ko -->
-                            <button type="button" class="btn--popover" data-bind="click: $root.showAssignUser.bind($root, $parent)">Assign issue to...</button>
+                            <button type="button" class="btn--popover" data-bind="click: $parent.showAssignUser.bind($parent)">Assign issue to...</button>
                             <!-- ko if: assignUserVisible -->
                             <div class="popover">
                                 <div class="popover-inner">
                                     <ul class="popover-list">
-                                        <!-- ko foreach: $root.users -->
+                                        <!-- ko foreach: $parent.users -->
                                         <li class="popover-list__item">
                                             <button class="btn--assign" data-bind="click: $parent.assignUser.bind($parent)">
                                                 <span class="avatar make-inline-block">

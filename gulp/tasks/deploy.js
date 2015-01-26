@@ -14,7 +14,7 @@ gulp.task('build-gh-pages', ['build-js-app', 'build-html', 'build-css'], functio
     var css = gulp.src('./css/app.css', {cwd: './dist'})
         .pipe(gulp.dest('./dist/gh-pages/css'));
 
-    var js = gulp.src('./js/app.js', {cwd: './dist'})
+    var js = gulp.src('./js/app.js*', {cwd: './dist'})
         .pipe(gulp.dest('./dist/gh-pages/js'));
 
     return merge(html, css, js);
