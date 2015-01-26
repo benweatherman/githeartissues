@@ -22,8 +22,7 @@
             <span class="fa fa-times hide--drawer-out"  title="Hide all open issues" data-bind="click: allIssuesVisible.bind($data, false)"></span>
         </button>
         <h4 class="subheader">
-            <!-- Add class "can-save" when user has made a change to the UI -->
-            <a class="subheader__link" href="https://github.com/ordoro/ordoro/issues" target="_blank">Open Issues</a>
+            <a class="subheader__link" target="_blank" data-bind="attr: {href: allIssuesURL}">Open Issues</a>
         </h4>
         <input type="text" class="text-input search" data-bind="value: allIssuesSearch, valueUpdate: 'input'">
         <ul class="list list--drawer connected-sortable" data-bind="sortable: {data: allIssues, connectClass: 'connected-sortable'}">
