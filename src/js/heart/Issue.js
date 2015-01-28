@@ -41,7 +41,7 @@ _.extend(Issue.prototype, {
     save: function() {
         var d = {
             milestone: this.milestoneNumber(),
-            assignee: this.assignee() && this.assignee().login()
+            assignee: this.assignee() && this.assignee().login() || null
         };
 
         return github.patch(this.url(), d);
