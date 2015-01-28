@@ -5,7 +5,7 @@ var merge = require('merge-stream');
 var deploy = require('gulp-gh-pages');
 var version = require('../../package.json').version;
 
-gulp.task('build-gh-pages', ['build-js-app', 'build-html', 'build-css'], function() {
+gulp.task('build-gh-pages', ['build'], function() {
     var html = gulp.src('html/gh-pages.html', {cwd: './dist'})
         .pipe(replace(/app.(css|js)/g, 'app.$1?v=' + version))
         .pipe(rename('index.html'))
@@ -17,7 +17,10 @@ gulp.task('build-gh-pages', ['build-js-app', 'build-html', 'build-css'], functio
     var js = gulp.src('./js/app.js*', {cwd: './dist'})
         .pipe(gulp.dest('./dist/gh-pages/js'));
 
-    return merge(html, css, js);
+    var fonts = gulp.src('./fonts/*', {cwd: './dist'})
+        .pipe(gulp.dest('./dist/gh-pages/fonts'));
+
+    return merge(html, css, js, fonts);
 });
 
 gulp.task('deploy', ['build-gh-pages'], function() {
