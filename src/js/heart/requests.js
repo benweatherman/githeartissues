@@ -26,7 +26,8 @@ var requests = {
             if (done) { return; }
             done = true;
 
-            console.log(requestID.toString(), '[' + method.toUpperCase() + ']', xhr.status, url);
+            // This can be noisy
+            // console.log(requestID.toString(), '[' + method.toUpperCase() + ']', xhr.status, url);
 
             // Sometimes different environments don't use case-insensitive matching
             var contentType = xhr.getResponseHeader('content-type') || xhr.getResponseHeader('Content-type');

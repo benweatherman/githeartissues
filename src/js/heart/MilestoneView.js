@@ -7,16 +7,15 @@ var log = require('./log');
 var github = require('./github');
 var Milestone = require('./Milestone');
 var IssueView = require('./IssueView');
-var IssuePriority = require('./IssuePriority');
 
-function MilestoneView(data, repo, dataBranch, users) {
-    Milestone.call(this, data, repo);
+function MilestoneView(data, users, storage) {
+    Milestone.call(this, data);
 
     this.issueViews = ko.observableArray();
     this.originalIssueViews = ko.observableArray();
 
-    this.priorityStorage = new IssuePriority(repo, this.number(), this.title(), dataBranch);
-    this.priorities = ko.observableArray();
+    this.issueStorage = storage;
+    this.sortOrder = ko.observableArray();
     this.users = users;
     this.dirty = ko.computed(function() {
         var original = this.originalIssueViews().map(function(view) { return view.number(); });
@@ -30,11 +29,11 @@ function MilestoneView(data, repo, dataBranch, users) {
 
 _.extend(MilestoneView.prototype, Milestone.prototype, {
     loadIssues: function() {
-        return this.priorityStorage.get()
-            .tap(this.priorities.bind(this))
+        return this.issueStorage.getSortOrder(this)
+            .tap(this.sortOrder.bind(this))
             .then(this.fetchIssues.bind(this))
             .then(function(issueViews) {
-                return [issueViews, this.priorities()];
+                return [issueViews, this.sortOrder()];
             }.bind(this))
             .spread(this.sortViews.bind(this))
             .tap(this.issueViews.bind(this))
@@ -58,7 +57,7 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
                 throw new Error(msg);
             }.bind(this));
     },
-    sortViews: function(issueViews, issueNumbers) {
+    sortViews: function(issueViews, sortOrder) {
         var remainingIssueNumbers = issueViews.map(function(view) { return view.number(); });
         var sortedIssues = [];
 
@@ -67,7 +66,7 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
             issuesByNumber[view.number()] = view;
         });
 
-        issueNumbers.forEach(function(issueNumber) {
+        sortOrder.forEach(function(issueNumber) {
             var issue = issuesByNumber[issueNumber];
             if (issue) {
                 sortedIssues.push(issue);
@@ -84,13 +83,10 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
 
         return sortedIssues;
     },
-    savePriorities: function() {
-        var issueNumbers = this.issueViews().map(function(issue) { return issue.number(); });
-
-        log.log('Priorities:', issueNumbers);
-
-        return this.priorityStorage.save(issueNumbers)
-            .tap(this.priorities.bind(this, issueNumbers));
+    saveSortOrder: function() {
+        return this.issueStorage.saveSortOrder(this, this.issueViews())
+            .tap(this.sortOrder.bind(this))
+            .tap(log.log.bind(log, 'Sort order:'));
     },
     removeMilestone: function(issueView) {
         this.issueViews.remove(issueView);
@@ -110,7 +106,8 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
         var newIssues = this.issueViews().filter(function(view) { return view.milestoneNumber() !== this.number(); }.bind(this));
         var deletedIssues = this.originalIssueViews().filter(function(view) { return !view.milestoneNumber(); });
 
-        log.log('Save info for', this.title(), '=========================');
+        log.log('============================');
+        log.log('Save info for', this.title());
         newIssues.forEach(function(view) { view.milestoneNumber(this.number()); }.bind(this));
 
         return when.try(function() {
@@ -121,9 +118,7 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
                 log.log('Deleted issues:', deletedIssues);
                 return sequence(deletedIssues.map(function(view) { return view.save.bind(view); }));
             })
-            .tap(function() {
-                return this.savePriorities();
-            }.bind(this))
+            .tap(this.saveSortOrder.bind(this))
             .then(function() {
                 this.originalIssueViews(this.issueViews().slice());
 
@@ -132,7 +127,7 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
             }.bind(this));
     },
     revert: function() {
-        var sorted = this.sortViews(this.originalIssueViews(), this.priorities());
+        var sorted = this.sortViews(this.originalIssueViews(), this.sortOrder());
         this.issueViews(sorted);
     }
 });
