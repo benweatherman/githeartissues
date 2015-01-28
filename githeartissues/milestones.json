@@ -1,6 +1,10 @@
 {
   "1": [
     {
+      "title": "Simpler priority format",
+      "number": 24
+    },
+    {
       "title": "Add tests",
       "number": 17
     }
