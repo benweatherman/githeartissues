@@ -1,10 +1,6 @@
 {
   "1": [
     {
-      "title": "Add tests",
-      "number": 17
-    },
-    {
       "title": "Changing assignees should make the save button appear",
       "number": 22
     }
