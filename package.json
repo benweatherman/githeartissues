@@ -52,7 +52,7 @@
     "karma-phantomjs-launcher": "0.1.4",
     "karma-sinon": "1.0.3",
     "knockout": "3.1.0",
-    "lodash": "2.4.1",
+    "lodash": "3.0.0",
     "merge-stream": "0.1.5",
     "mocha": "1.21.4",
     "moment": "2.9.0",

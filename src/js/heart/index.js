@@ -12,6 +12,7 @@ var github = require('./github');
 var log = require('./log');
 var MilestoneView = require('./MilestoneView');
 var IssueView = require('./IssueView');
+var IssueStorage = require('./IssueStorage');
 var User = require('./User');
 var CredentialsDialog = require('./credentials/CredentialsDialog');
 
@@ -34,6 +35,7 @@ function Heart() {
     this.allIssuesVisible.subscribe(localStorage.setItem.bind(localStorage, 'allIssuesVisible'));
     this.allIssuesURL = ko.computed(function() { return 'https://github.com/' + this.repo() + '/issues'; }.bind(this));
     this.credentialsDialog = new CredentialsDialog();
+    this.issueStorage = null;  // We'll wait to create this until we're sure everything's been configured
 
     this.isConfigured = ko.computed(function() { return this.token() && this.token().length && this.repo() && this.repo().length; }, this);
 
@@ -71,6 +73,8 @@ _.extend(Heart.prototype, {
 
         this.milestones.removeAll();
 
+        this.issueStorage = this.issueStorage || new IssueStorage(this.repo(), this.branch());
+
         var milestoneSortOrder = JSON.parse(localStorage.getItem(this.getMilestoneSortKey()));
 
         var assigneesRequest = github.get('repos/' + this.repo() + '/assignees')
@@ -82,7 +86,7 @@ _.extend(Heart.prototype, {
 
         when.all([assigneesRequest, milestonesRequest])
             .spread(function(assignees, milestonesResponse) {
-                return milestonesResponse.map(function(m) { return new MilestoneView(m, this.repo(), this.branch(), assignees); }, this);
+                return milestonesResponse.map(function(m) { return new MilestoneView(m, assignees, this.issueStorage); }, this);
             }.bind(this))
             .then(this.sortMilestones.bind(this, milestoneSortOrder))
             .tap(this.milestones.bind(this))
@@ -174,6 +178,9 @@ _.extend(Heart.prototype, {
         var tasks = this.milestones().map(function(milestone) { return milestone.save.bind(milestone); });
 
         sequence(tasks)
+            .tap(function() {
+                return this.issueStorage.save();
+            }.bind(this))
             .finally(this.saving.bind(this, false));
     },
     revert: function() {

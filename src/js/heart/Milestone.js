@@ -17,6 +17,8 @@ function Milestone(data) {
 
 _.extend(Milestone.prototype, {
     load: function(data) {
+        log.log('Loading milestone data', data);
+
         this.data = data;
 
         this.number(data.number);
