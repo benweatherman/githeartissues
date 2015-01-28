@@ -32126,7 +32126,7 @@ _.extend(Issue.prototype, {
     save: function() {
         var d = {
             milestone: this.milestoneNumber(),
-            assignee: this.assignee() && this.assignee().login()
+            assignee: this.assignee() && this.assignee().login() || null
         };
 
         return github.patch(this.url(), d);
@@ -32235,30 +32235,32 @@ function IssueView() {
     Issue.apply(this, arguments);
 
     this.assignUserVisible = ko.observable();
+    this.originalAssignee = ko.observable(this.assignee());
+
+    this.dirty = ko.computed(function() {
+        return this.originalAssignee() !== this.assignee();
+    }.bind(this));
 }
 
 _.extend(IssueView.prototype, Issue.prototype, {
     assignUser: function(user) {
-        log.log('ASSigning', user, '=>', this);
+        log.log('ASSigning', user, 'to', this);
         this.assignee(user);
-
-        this.save()
-            .tap(this.assignUserVisible.bind(this, false))
-            .catch(log.error.bind(log));
+        this.assignUserVisible(false);
     },
-    removeUser: function(user) {
-        log.log('unASSigning', user, '=>', this);
-        this.assignee(null);
-
-        this.save()
-            .tap(this.assignUserVisible.bind(this, false))
-            .catch(log.error.bind(log));
-    }
-});
-
-_.extend(IssueView, {
-    clone: function(issue) {
-        return new IssueView(issue.data);
+    removeUser: function() {
+        log.log('unASSigning user from', this);
+        this.assignee(undefined);
+        this.assignUserVisible(false);
+    },
+    save: function() {
+        return Issue.prototype.save.apply(this, arguments)
+            .tap(function() {
+                this.originalAssignee(this.assignee());
+            }.bind(this));
+    },
+    revert: function() {
+        this.assignee(this.originalAssignee());
     }
 });
 
@@ -32346,8 +32348,9 @@ function MilestoneView(data, users, storage) {
     this.dirty = ko.computed(function() {
         var original = this.originalIssueViews().map(function(view) { return view.number(); });
         var current = this.issueViews().map(function(view) { return view.number(); });
+        var dirtyIssues = this.issueViews().filter(function(view) { return view.dirty(); });
 
-        return !_.isEqual(original, current);
+        return !_.isEqual(original, current) || dirtyIssues.length;
     }.bind(this));
 
     this.loadIssues();
@@ -32429,16 +32432,16 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
         });
     },
     save: function() {
-        var newIssues = this.issueViews().filter(function(view) { return view.milestoneNumber() !== this.number(); }.bind(this));
+        var changedIssues = this.issueViews().filter(function(view) { return view.milestoneNumber() !== this.number() || view.dirty(); }.bind(this));
         var deletedIssues = this.originalIssueViews().filter(function(view) { return !view.milestoneNumber(); });
 
         log.log('============================');
         log.log('Save info for', this.title());
-        newIssues.forEach(function(view) { view.milestoneNumber(this.number()); }.bind(this));
+        changedIssues.forEach(function(view) { view.milestoneNumber(this.number()); }.bind(this));
 
         return when.try(function() {
-                log.log('New issues:', newIssues);
-                return sequence(newIssues.map(function(view) { return view.save.bind(view); }));
+                log.log('Changed issues:', changedIssues);
+                return sequence(changedIssues.map(function(view) { return view.save.bind(view); }));
             })
             .tap(function() {
                 log.log('Deleted issues:', deletedIssues);
@@ -32449,11 +32452,12 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
                 this.originalIssueViews(this.issueViews().slice());
 
                 log.log('============================');
-                return [newIssues, deletedIssues];
+                return [changedIssues, deletedIssues];
             }.bind(this));
     },
     revert: function() {
         var sorted = this.sortViews(this.originalIssueViews(), this.sortOrder());
+        sorted.forEach(function(view) { view.revert(); });
         this.issueViews(sorted);
     }
 });
