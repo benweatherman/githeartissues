@@ -8,30 +8,32 @@ function IssueView() {
     Issue.apply(this, arguments);
 
     this.assignUserVisible = ko.observable();
+    this.originalAssignee = ko.observable(this.assignee());
+
+    this.dirty = ko.computed(function() {
+        return this.originalAssignee() !== this.assignee();
+    }.bind(this));
 }
 
 _.extend(IssueView.prototype, Issue.prototype, {
     assignUser: function(user) {
-        log.log('ASSigning', user, '=>', this);
+        log.log('ASSigning', user, 'to', this);
         this.assignee(user);
-
-        this.save()
-            .tap(this.assignUserVisible.bind(this, false))
-            .catch(log.error.bind(log));
+        this.assignUserVisible(false);
     },
-    removeUser: function(user) {
-        log.log('unASSigning', user, '=>', this);
-        this.assignee(null);
-
-        this.save()
-            .tap(this.assignUserVisible.bind(this, false))
-            .catch(log.error.bind(log));
-    }
-});
-
-_.extend(IssueView, {
-    clone: function(issue) {
-        return new IssueView(issue.data);
+    removeUser: function() {
+        log.log('unASSigning user from', this);
+        this.assignee(undefined);
+        this.assignUserVisible(false);
+    },
+    save: function() {
+        return Issue.prototype.save.apply(this, arguments)
+            .tap(function() {
+                this.originalAssignee(this.assignee());
+            }.bind(this));
+    },
+    revert: function() {
+        this.assignee(this.originalAssignee());
     }
 });
 
