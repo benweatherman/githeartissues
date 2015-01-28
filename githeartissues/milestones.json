@@ -3,16 +3,11 @@
     {
       "title": "Add tests",
       "number": 17
-    }
-  ],
-  "2": [
-    {
-      "title": "Use more clouds",
-      "number": 18
     },
     {
-      "title": "Use more unicorns",
-      "number": 19
+      "title": "Changing assignees should make the save button appear",
+      "number": 22
     }
-  ]
+  ],
+  "2": []
 }
