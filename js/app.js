@@ -32160,7 +32160,7 @@ _.extend(IssueStorage.prototype, {
             return when.resolve(issues);
         }
 
-        return this.getFileInfo(this.githubFilePath, this.branch)
+        return this.getFileInfo(this.branch, this.githubFilePath)
             .then(function(fileInfo) {
                 this.issuesByMilestone = JSON.parse(atob(fileInfo.content));
                 return this.issuesByMilestone[milestone.number()];
@@ -32184,7 +32184,7 @@ _.extend(IssueStorage.prototype, {
         return when.resolve(sortOrder);
     },
     save: function() {
-        return this.getFileInfo(this.githubFilePath, this.branch)
+        return this.getFileInfo(this.branch, this.githubFilePath)
             .catch(function() {
                 return null;
             })
@@ -32204,13 +32204,19 @@ _.extend(IssueStorage.prototype, {
                     sha: fileInfo && fileInfo.sha
                 };
 
-                return github.put(this.githubFilePath, data)
-                    .then(function(response) {
-                        return this.issueNumbers;
-                    }.bind(this));
+                return github.put(this.githubFilePath, data);
+            }.bind(this))
+            .then(function(response) {
+                var key = this.branch + ':' + this.githubFilePath;
+                var fileInfo = _.clone(response.content);
+                this.fileInfoCache[key] = when.resolve(response.content);
+
+                log.log('Cached saved file info', fileInfo);
+
+                return this.issuesByMilestone;
             }.bind(this));
     },
-    getFileInfo: function(path, branch) {
+    getFileInfo: function(branch, path) {
         var key = branch + ':' + path;
         return this.fileInfoCache[key] || (this.fileInfoCache[key] = github.get(path, {ref: branch}));
     }
