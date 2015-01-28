@@ -1,10 +1,6 @@
 {
   "1": [
     {
-      "title": "Changing assignees should make the save button appear",
-      "number": 22
-    },
-    {
       "title": "Add tests",
       "number": 17
     }
@@ -13,6 +9,10 @@
     {
       "title": "Use more clouds",
       "number": 18
+    },
+    {
+      "title": "Use more unicorns",
+      "number": 19
     }
   ]
 }
