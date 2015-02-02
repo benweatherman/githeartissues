@@ -32163,7 +32163,7 @@ _.extend(IssueStorage.prototype, {
         return this.getFileInfo(this.branch, this.githubFilePath)
             .then(function(fileInfo) {
                 this.issuesByMilestone = JSON.parse(atob(fileInfo.content));
-                return this.issuesByMilestone[milestone.number()];
+                return this.issuesByMilestone[milestone.number()] || [];
             }.bind(this))
             .catch(function(err) {
                 log.warn('No config file for ', this.githubFilePath, err);
