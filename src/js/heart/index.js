@@ -57,6 +57,9 @@ function Heart() {
 _.extend(Heart.prototype, {
     template: fs.readFileSync(__dirname + '/index.html', 'utf8'),
     github: github,
+    toggleAllIssuesVisible: function() {
+        this.allIssuesVisible(!this.allIssuesVisible());
+    },
     start: function(el) {
         this.loadConfig();
         if (this.isConfigured()) {
