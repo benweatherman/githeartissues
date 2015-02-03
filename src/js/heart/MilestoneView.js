@@ -46,7 +46,7 @@ _.extend(MilestoneView.prototype, Milestone.prototype, {
         log.log('Fetching issues for milestone', this.number(), ':', this.title());
 
         var url = this.url().replace(/milestones\/\d*/g, 'issues');
-        var params = {page_page: 100, milestone: this.number()};
+        var params = {per_page: 100, milestone: this.number()};
 
         return github.get(url, params)
             .then(function(response) {
