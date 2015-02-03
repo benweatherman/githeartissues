@@ -20,7 +20,12 @@ gulp.task('build-gh-pages', ['build'], function() {
     var fonts = gulp.src('./fonts/*', {cwd: './dist'})
         .pipe(gulp.dest('./dist/gh-pages/fonts'));
 
-    return merge(html, css, js, fonts);
+    var imagemin = require('gulp-imagemin');
+    var images = gulp.src('./images/**', {cwd: './dist/'})
+        .pipe(imagemin())
+        .pipe(gulp.dest('./dist/gh-pages/images'));
+
+    return merge(html, css, js, fonts, images);
 });
 
 gulp.task('deploy', ['build-gh-pages'], function() {
