@@ -1,15 +1,20 @@
 
-### Motivation
-At ordoro, we file all issues in a single repo. Our milestones are just our teams. When we figure out the next issues to work on, we assign said issues to the team's milestone. This is perfect, except it's hard to tell what the top priority is when we've got a few issues ready to work on.
-
-This page will load all the milestones in a nice kanban-ish card layout. You can then re-order them, assign them to other milestones, and change the assignee.
-
-We've always loved using github issues. Now we ♥ using it.
-
+### A peek behind the kimono
+![hai](https://cloud.githubusercontent.com/assets/272675/6013743/64db402a-ab1e-11e4-9dff-1f5c26b8aeb5.png)
 
 #### Demo
 
-Check out http://benweatherman.github.io/githeartissues/
+Check it out for yourself https://benweatherman.github.io/githeartissues/
+
+### Hai
+
+I love github issues. I love the trello UI. But all the ways of making them play together really suck. So I made git♥issues to combine the awesomeness of github issues with the awesomeness of drag and drop.
+
+I like it for 4 main reasons:
+1. __Drag/drop UI__ Your issue and milestone data is loaded directly from the github API. You can use our drag/drop interface to change issue prioritization within a milestone or drag an issue to a completely new milestone.
+2. __Prioritization__ It saves your issues in order so you can prioritize them for your team.
+3. __Batch modification__ Make a bunch of changes to priorities, milestones, assignees, etc and then save them all at once. This also creates a nicely diffable file that can be used to track how priorities change over time and who's changing them.
+4. __Serverless__ It's all loaded directly from the github API so there's no infrastructure to maintain (except for what the awesome github folks already do obvi). It also shows I'm not leaving your c0dez on a bunch of insecure servers. Even the prioritization info is saved as file in github!
 
 
 #### Building
@@ -18,12 +23,4 @@ Check out http://benweatherman.github.io/githeartissues/
 ./bootstrap.sh
 gulp build watch
 open dist/html/app.html
-```
-
-
-#### Deploying
-
-```bash
-gulp bump
-gulp deploy
 ```
