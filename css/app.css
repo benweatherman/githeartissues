@@ -2649,7 +2649,7 @@ html, body {
   -ms-flex: 0 0 3em;
   flex: 0 0 3em;
   z-index: 10;
-  background: #fff url(http://449b5aa70d3b497fd542-78ae780b3f7953ce47f76a52edee37a4.r48.cf2.rackcdn.com/search-grey-16.png) 0.5em 0.65em no-repeat; }
+  background: #fff url(../images/search-grey-16.png) 0.5em 0.65em no-repeat; }
   /* line 340, /Users/benweatherman/code/git♥issues/src/sass/base */
   .search:focus {
     width: 175%;
