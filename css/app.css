@@ -2517,22 +2517,23 @@ html, body {
 
 /* line 212, /Users/benweatherman/code/git♥issues/src/sass/base */
 .subheader {
+  min-height: 1.7em;
   margin-bottom: 0.5em;
   margin-top: 2em;
   padding-top: 0.5em;
   border-top: 2px solid #ddd;
   text-shadow: rgba(255, 255, 255, 0.6) 0 1px 0; }
 
-/* line 220, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 221, /Users/benweatherman/code/git♥issues/src/sass/base */
 .subheader__link {
   color: #444;
   text-decoration: none; }
-  /* line 223, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 224, /Users/benweatherman/code/git♥issues/src/sass/base */
   .subheader__link:hover {
     color: #111;
     border-bottom: 1px dotted #aaa; }
 
-/* line 229, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 230, /Users/benweatherman/code/git♥issues/src/sass/base */
 .img--avatar {
   width: 100%;
   height: auto;
@@ -2540,7 +2541,7 @@ html, body {
   -moz-transition: all 0.2s ease-out 0;
   transition: all 0.2s ease-out 0; }
 
-/* line 235, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 236, /Users/benweatherman/code/git♥issues/src/sass/base */
 .avatar {
   border: 2px solid #fff;
   width: 2em;
@@ -2548,36 +2549,36 @@ html, body {
   margin-right: 0.25em;
   vertical-align: middle; }
 
-/* line 243, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 244, /Users/benweatherman/code/git♥issues/src/sass/base */
 .ui-sortable-helper {
   box-shadow: rgba(0, 0, 0, 0.3) 0 0.5em 1em; }
 
 /*------------------------------------*\
     #FORMS
 \*------------------------------------*/
-/* line 252, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 253, /Users/benweatherman/code/git♥issues/src/sass/base */
 .form-list {
   padding-left: 0;
   font-size: 0.9em; }
 
-/* line 257, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 258, /Users/benweatherman/code/git♥issues/src/sass/base */
 .form-list__item {
   font-size: 1.25em;
   margin-bottom: 1.15em;
   list-style-type: none; }
-  /* line 262, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 263, /Users/benweatherman/code/git♥issues/src/sass/base */
   .form-list__item label {
     display: block;
     margin-bottom: 0.1em;
     text-shadow: rgba(255, 255, 255, 0.6) 0 1px 0; }
-    /* line 267, /Users/benweatherman/code/git♥issues/src/sass/base */
+    /* line 268, /Users/benweatherman/code/git♥issues/src/sass/base */
     .form-list__item label a, .form-list__item label a:hover {
       color: #111; }
-  /* line 272, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 273, /Users/benweatherman/code/git♥issues/src/sass/base */
   .form-list__item:last-of-type {
     margin-bottom: 0; }
 
-/* line 277, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 278, /Users/benweatherman/code/git♥issues/src/sass/base */
 .text-input {
   width: 100%;
   border: 2px solid #999;
@@ -2587,27 +2588,27 @@ html, body {
   font-family: 'Arimo', sans-serif;
   font-size: 0.85em;
   padding: 0.25em 0.5em; }
-  /* line 286, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 287, /Users/benweatherman/code/git♥issues/src/sass/base */
   .text-input:focus {
     outline: none;
     border: 2px solid #444;
     color: #444; }
 
-/* line 294, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 295, /Users/benweatherman/code/git♥issues/src/sass/base */
 .error-message {
   display: none; }
 
-/* line 299, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 300, /Users/benweatherman/code/git♥issues/src/sass/base */
 .error label {
   color: #ff0000; }
-/* line 302, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 303, /Users/benweatherman/code/git♥issues/src/sass/base */
 .error .text-input {
   border-color: #ff0000;
   color: #ff0000; }
-  /* line 305, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 306, /Users/benweatherman/code/git♥issues/src/sass/base */
   .error .text-input:focus {
     color: #444; }
-/* line 309, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 310, /Users/benweatherman/code/git♥issues/src/sass/base */
 .error .error-message {
   background: #ff0000;
   color: #fff;
@@ -2619,15 +2620,15 @@ html, body {
   margin-top: -0.35em;
   display: block;
   position: relative; }
-  /* line 320, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 321, /Users/benweatherman/code/git♥issues/src/sass/base */
   .error .error-message pre {
     white-space: normal;
     margin: 0.35em 0; }
-    /* line 323, /Users/benweatherman/code/git♥issues/src/sass/base */
+    /* line 324, /Users/benweatherman/code/git♥issues/src/sass/base */
     .error .error-message pre .make-block {
       margin-bottom: 0.3em; }
 
-/* line 330, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 331, /Users/benweatherman/code/git♥issues/src/sass/base */
 .search {
   margin: 1.25em 0 0.5em 0;
   font-size: 0.7em;
@@ -2650,12 +2651,12 @@ html, body {
   flex: 0 0 3em;
   z-index: 10;
   background: #fff url(../images/search-grey-16.png) 0.5em 0.65em no-repeat; }
-  /* line 340, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 341, /Users/benweatherman/code/git♥issues/src/sass/base */
   .search:focus {
     width: 175%;
     box-shadow: rgba(255, 255, 255, 0.7) 0 0em 2em; }
 
-/* line 346, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 347, /Users/benweatherman/code/git♥issues/src/sass/base */
 .helper-message {
   background: #777;
   color: #ffff99;
@@ -2668,26 +2669,26 @@ html, body {
   margin-top: -0.35em;
   display: block;
   position: relative; }
-  /* line 358, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 359, /Users/benweatherman/code/git♥issues/src/sass/base */
   .helper-message pre {
     color: #fff;
     line-height: 1;
     white-space: normal;
     margin: 0.75em 0; }
-    /* line 363, /Users/benweatherman/code/git♥issues/src/sass/base */
+    /* line 364, /Users/benweatherman/code/git♥issues/src/sass/base */
     .helper-message pre .make-block {
       margin-bottom: 0.75em; }
 
 /*------------------------------------*\
     #POPOVERS
 \*------------------------------------*/
-/* line 374, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 375, /Users/benweatherman/code/git♥issues/src/sass/base */
 .popover-wrap {
   position: relative;
   display: block;
   margin-top: 0.25em; }
 
-/* line 380, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 381, /Users/benweatherman/code/git♥issues/src/sass/base */
 .popover {
   position: static;
   width: 100%;
@@ -2697,22 +2698,22 @@ html, body {
   border-radius: 0 0.2em 0.2em 0.2em;
   padding: 0; }
 
-/* line 390, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 391, /Users/benweatherman/code/git♥issues/src/sass/base */
 .popover-list {
   padding-left: 0;
   list-style: none;
   font-size: 0.9em; }
 
-/* line 396, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 397, /Users/benweatherman/code/git♥issues/src/sass/base */
 .popover-list__item {
   font-size: 0.9em;
   margin: 0; }
-  /* line 401, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 402, /Users/benweatherman/code/git♥issues/src/sass/base */
   .popover-list__item:last-of-type .btn--assign {
     border-bottom: 0;
     border-radius: 0 0 0.25em 0.25em; }
 
-/* line 409, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 410, /Users/benweatherman/code/git♥issues/src/sass/base */
 .expanded .btn--popover {
   background: #888;
   padding-bottom: 0.8em;
@@ -2720,14 +2721,14 @@ html, body {
   border-top: 1px solid #888;
   font-weight: 700;
   -webkit-font-smoothing: antialiased; }
-  /* line 417, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 418, /Users/benweatherman/code/git♥issues/src/sass/base */
   .expanded .btn--popover:hover, .expanded .btn--popover:focus {
     color: #fff; }
 
 /*------------------------------------*\
     #MODALS
 \*------------------------------------*/
-/* line 427, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 428, /Users/benweatherman/code/git♥issues/src/sass/base */
 .modal-bg {
   position: fixed;
   z-index: 98;
@@ -2740,13 +2741,13 @@ html, body {
   text-align: left;
   background: rgba(0, 0, 0, 0.8);
   display: none; }
-  /* line 439, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 440, /Users/benweatherman/code/git♥issues/src/sass/base */
   .modal-bg.in {
     display: block;
     visibility: visible;
     opacity: 1; }
 
-/* line 446, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 447, /Users/benweatherman/code/git♥issues/src/sass/base */
 .modal {
   position: absolute;
   z-index: 99;
@@ -2758,7 +2759,7 @@ html, body {
   box-shadow: rgba(0, 0, 0, 0.8) 0 0 0.5em;
   top: 5%;
   left: 35%; }
-  /* line 457, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 458, /Users/benweatherman/code/git♥issues/src/sass/base */
   .modal h2 {
     margin-top: 0;
     margin-bottom: 1em;
@@ -2768,7 +2769,7 @@ html, body {
 /*------------------------------------*\
     #BUTTONS
 \*------------------------------------*/
-/* line 471, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 472, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn {
   border-radius: 0.25em;
   -webkit-transition: all 0.5s ease-out 0;
@@ -2786,7 +2787,7 @@ html, body {
   background-image: linear-gradient( #EC6600, #c85700);
   text-transform: uppercase;
   padding: 0.75em 2em; }
-  /* line 485, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 486, /Users/benweatherman/code/git♥issues/src/sass/base */
   .btn:hover, .btn:focus {
     cursor: pointer;
     outline: none;
@@ -2796,7 +2797,7 @@ html, body {
     border: 2px solid #863a00;
     box-shadow: rgba(255, 255, 255, 0.5) 0 1px 0 inset; }
 
-/* line 495, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 496, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn--icon {
   margin: 0;
   background: transparent;
@@ -2810,13 +2811,13 @@ html, body {
   display: inline-block;
   font-size: 0.8em;
   opacity: 0.3; }
-  /* line 507, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 508, /Users/benweatherman/code/git♥issues/src/sass/base */
   .btn--icon:hover, .btn--icon:focus {
     outline: none;
     opacity: 0.6;
     cursor: pointer; }
 
-/* line 514, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 515, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn--avatar {
   margin: 0;
   padding: 0;
@@ -2830,7 +2831,7 @@ html, body {
   text-align: center;
   font-size: 1em;
   z-index: 3; }
-  /* line 528, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 529, /Users/benweatherman/code/git♥issues/src/sass/base */
   .btn--avatar .fa {
     -webkit-transition: all 0.2s ease-out 0;
     -moz-transition: all 0.2s ease-out 0;
@@ -2841,18 +2842,18 @@ html, body {
     opacity: 0;
     top: 0;
     left: 0.1em; }
-  /* line 538, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 539, /Users/benweatherman/code/git♥issues/src/sass/base */
   .btn--avatar:hover {
     cursor: pointer;
     outline: none; }
-    /* line 542, /Users/benweatherman/code/git♥issues/src/sass/base */
+    /* line 543, /Users/benweatherman/code/git♥issues/src/sass/base */
     .btn--avatar:hover .fa {
       opacity: 0.8; }
-    /* line 546, /Users/benweatherman/code/git♥issues/src/sass/base */
+    /* line 547, /Users/benweatherman/code/git♥issues/src/sass/base */
     .btn--avatar:hover .img--avatar {
       opacity: 0.2; }
 
-/* line 552, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 553, /Users/benweatherman/code/git♥issues/src/sass/base */
 .list--utility {
   position: absolute;
   left: 45%;
@@ -2867,25 +2868,25 @@ html, body {
   -webkit-transition: all 0.2s ease-out 0;
   -moz-transition: all 0.2s ease-out 0;
   transition: all 0.2s ease-out 0; }
-  /* line 565, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 566, /Users/benweatherman/code/git♥issues/src/sass/base */
   .list--utility.in {
     top: 0; }
 
-/* line 570, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 571, /Users/benweatherman/code/git♥issues/src/sass/base */
 .list__item--utility {
   display: inline-block;
   list-style: none;
   line-height: 1.5;
   margin-left: 0.45em; }
-  /* line 575, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 576, /Users/benweatherman/code/git♥issues/src/sass/base */
   .list__item--utility:first-of-type {
     margin-left: 0; }
 
-/* line 581, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 582, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn__text {
   font-size: 0.85em; }
 
-/* line 585, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 586, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn--settings {
   position: absolute;
   left: 0.35em;
@@ -2894,7 +2895,7 @@ html, body {
   margin: 0;
   padding: 0; }
 
-/* line 594, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 595, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn--toggle {
   text-align: center;
   opacity: 1;
@@ -2904,18 +2905,18 @@ html, body {
   padding: 0;
   border-radius: 0 0.25em 0.25em 0;
   background: #ccc; }
-  /* line 604, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 605, /Users/benweatherman/code/git♥issues/src/sass/base */
   .btn--toggle .fa {
     opacity: 0.4;
     padding: 0.5em; }
-  /* line 609, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 610, /Users/benweatherman/code/git♥issues/src/sass/base */
   .btn--toggle:hover {
     opacity: 1; }
-    /* line 611, /Users/benweatherman/code/git♥issues/src/sass/base */
+    /* line 612, /Users/benweatherman/code/git♥issues/src/sass/base */
     .btn--toggle:hover .fa {
       opacity: 0.7; }
 
-/* line 617, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 618, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn--remove {
   position: absolute;
   top: 0.25em;
@@ -2926,14 +2927,14 @@ html, body {
   -moz-transition: all 0.2s ease-out 0;
   transition: all 0.2s ease-out 0; }
 
-/* line 627, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 628, /Users/benweatherman/code/git♥issues/src/sass/base */
 .list__item:hover .btn--remove {
   opacity: 0.3; }
-  /* line 630, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 631, /Users/benweatherman/code/git♥issues/src/sass/base */
   .list__item:hover .btn--remove:hover {
     opacity: 0.5; }
 
-/* line 636, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 637, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn--popover {
   background: #fff;
   text-align: left;
@@ -2944,13 +2945,13 @@ html, body {
   font-family: 'Arimo', sans-serif;
   padding: 0.75em 1em 0.75em 1.25em;
   border-radius: 0 0 0.25em 0.25em; }
-  /* line 647, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 648, /Users/benweatherman/code/git♥issues/src/sass/base */
   .btn--popover:hover, .btn--popover:focus {
     color: #999;
     cursor: pointer;
     outline: none; }
 
-/* line 654, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 655, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn--assign {
   -webkit-font-smoothing: antialiased;
   border: 0;
@@ -2964,65 +2965,65 @@ html, body {
   margin: 0;
   color: #fff;
   border-bottom: 1px dotted #bbb; }
-  /* line 668, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 669, /Users/benweatherman/code/git♥issues/src/sass/base */
   .btn--assign:hover {
     cursor: pointer;
     background: rgba(255, 255, 255, 0.15); }
-  /* line 673, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 674, /Users/benweatherman/code/git♥issues/src/sass/base */
   .btn--assign:focus {
     outline: none; }
 
-/* line 678, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 679, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn--assign-text {
   vertical-align: middle; }
 
-/* line 680, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 681, /Users/benweatherman/code/git♥issues/src/sass/base */
 .btn--disabled, .btn--disabled:hover {
   opacity: 0.15;
   cursor: default; }
 
-/* line 685, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 686, /Users/benweatherman/code/git♥issues/src/sass/base */
 .can-save {
   color: #EC6600;
   opacity: 1;
   -webkit-transition: all 0.3s ease-out 0;
   -moz-transition: all 0.3s ease-out 0;
   transition: all 0.3s ease-out 0; }
-  /* line 689, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 690, /Users/benweatherman/code/git♥issues/src/sass/base */
   .can-save:hover {
     cursor: pointer;
     color: #444;
     opacity: 1; }
-  /* line 694, /Users/benweatherman/code/git♥issues/src/sass/base */
+  /* line 695, /Users/benweatherman/code/git♥issues/src/sass/base */
   .can-save:focus {
     opacity: 1; }
 
 /*------------------------------------*\
     #HELPERS
 \*------------------------------------*/
-/* line 704, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 705, /Users/benweatherman/code/git♥issues/src/sass/base */
 .make-block {
   display: block; }
 
-/* line 706, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 707, /Users/benweatherman/code/git♥issues/src/sass/base */
 .make-inline-block {
   display: inline-block; }
 
-/* line 708, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 709, /Users/benweatherman/code/git♥issues/src/sass/base */
 .clearfix:after {
   content: "";
   display: table;
   clear: both; }
 
-/* line 714, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 715, /Users/benweatherman/code/git♥issues/src/sass/base */
 .right {
   float: right; }
 
-/* line 716, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 717, /Users/benweatherman/code/git♥issues/src/sass/base */
 .full-width {
   width: 100%; }
 
-/* line 718, /Users/benweatherman/code/git♥issues/src/sass/base */
+/* line 719, /Users/benweatherman/code/git♥issues/src/sass/base */
 .hide--drawer-out {
   display: none; }
 
